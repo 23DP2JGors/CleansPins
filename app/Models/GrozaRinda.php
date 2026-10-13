@@ -6,11 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-/**
- * Atsevišķas "Grozi" tabulas nav — lietotāja grozs ir implicīts:
- * tas ir visas "groza_rindas" rindas ar šī lietotāja lietotaja_id.
- * Tas novērš papildu JOIN, iegūstot grozu (sk. Lietotajs::grozaRindas()).
- */
+
 class GrozaRinda extends Model
 {
     use HasFactory;
