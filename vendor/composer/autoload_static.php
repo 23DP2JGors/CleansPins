@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitb3e4a427f5c94e0f9a18aba5efe988a4
+class ComposerStaticInitcc3e086eeaa58977e331ea486940cfc8
 {
     public static $files = array (
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
@@ -643,7 +643,14 @@ class ComposerStaticInitb3e4a427f5c94e0f9a18aba5efe988a4
         'App\\Http\\Middleware\\HandleInertiaRequests' => __DIR__ . '/../..' . '/app/Http/Middleware/HandleInertiaRequests.php',
         'App\\Http\\Requests\\Auth\\LoginRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Auth/LoginRequest.php',
         'App\\Http\\Requests\\ProfileUpdateRequest' => __DIR__ . '/../..' . '/app/Http/Requests/ProfileUpdateRequest.php',
-        'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
+        'App\\Models\\GrozaRinda' => __DIR__ . '/../..' . '/app/Models/GrozaRinda.php',
+        'App\\Models\\Kategorija' => __DIR__ . '/../..' . '/app/Models/Kategorija.php',
+        'App\\Models\\Lietotajs' => __DIR__ . '/../..' . '/app/Models/Lietotajs.php',
+        'App\\Models\\PasutijumaRinda' => __DIR__ . '/../..' . '/app/Models/PasutijumaRinda.php',
+        'App\\Models\\Pasutijums' => __DIR__ . '/../..' . '/app/Models/Pasutijums.php',
+        'App\\Models\\Problema' => __DIR__ . '/../..' . '/app/Models/Problema.php',
+        'App\\Models\\Produkts' => __DIR__ . '/../..' . '/app/Models/Produkts.php',
+        'App\\Models\\Zona' => __DIR__ . '/../..' . '/app/Models/Zona.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Brick\\Math\\BigDecimal' => __DIR__ . '/..' . '/brick/math/src/BigDecimal.php',
@@ -8091,9 +8098,9 @@ class ComposerStaticInitb3e4a427f5c94e0f9a18aba5efe988a4
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitb3e4a427f5c94e0f9a18aba5efe988a4::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitb3e4a427f5c94e0f9a18aba5efe988a4::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitb3e4a427f5c94e0f9a18aba5efe988a4::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitcc3e086eeaa58977e331ea486940cfc8::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitcc3e086eeaa58977e331ea486940cfc8::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitcc3e086eeaa58977e331ea486940cfc8::$classMap;
 
         }, null, ClassLoader::class);
     }
