@@ -175,6 +175,7 @@ class ComposerStaticInitcc3e086eeaa58977e331ea486940cfc8
         ),
         'F' =>
         array (
+            'FumeApp\\ModelTyper\\' => 19,
             'Fruitcake\\Cors\\' => 15,
             'Fidry\\CpuCoreCounter\\' => 21,
             'Faker\\' => 6,
@@ -197,6 +198,8 @@ class ComposerStaticInitcc3e086eeaa58977e331ea486940cfc8
         'C' =>
         array (
             'Cron\\' => 5,
+            'Composer\\Pcre\\' => 14,
+            'Composer\\ClassMapGenerator\\' => 27,
             'Carbon\\Doctrine\\' => 16,
             'Carbon\\' => 7,
         ),
@@ -555,6 +558,10 @@ class ComposerStaticInitcc3e086eeaa58977e331ea486940cfc8
         array (
             0 => __DIR__ . '/..' . '/graham-campbell/result-type/src',
         ),
+        'FumeApp\\ModelTyper\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/fumeapp/modeltyper/src',
+        ),
         'Fruitcake\\Cors\\' =>
         array (
             0 => __DIR__ . '/..' . '/fruitcake/php-cors/src',
@@ -608,6 +615,14 @@ class ComposerStaticInitcc3e086eeaa58977e331ea486940cfc8
         'Cron\\' =>
         array (
             0 => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron',
+        ),
+        'Composer\\Pcre\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/composer/pcre/src',
+        ),
+        'Composer\\ClassMapGenerator\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/composer/class-map-generator/src',
         ),
         'Carbon\\Doctrine\\' =>
         array (
@@ -766,7 +781,29 @@ class ComposerStaticInitcc3e086eeaa58977e331ea486940cfc8
         'Carbon\\Unit' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Unit.php',
         'Carbon\\WeekDay' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/WeekDay.php',
         'Carbon\\WrapperClock' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/WrapperClock.php',
+        'Composer\\ClassMapGenerator\\ClassMap' => __DIR__ . '/..' . '/composer/class-map-generator/src/ClassMap.php',
+        'Composer\\ClassMapGenerator\\ClassMapGenerator' => __DIR__ . '/..' . '/composer/class-map-generator/src/ClassMapGenerator.php',
+        'Composer\\ClassMapGenerator\\FileList' => __DIR__ . '/..' . '/composer/class-map-generator/src/FileList.php',
+        'Composer\\ClassMapGenerator\\PhpFileCleaner' => __DIR__ . '/..' . '/composer/class-map-generator/src/PhpFileCleaner.php',
+        'Composer\\ClassMapGenerator\\PhpFileParser' => __DIR__ . '/..' . '/composer/class-map-generator/src/PhpFileParser.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'Composer\\Pcre\\MatchAllResult' => __DIR__ . '/..' . '/composer/pcre/src/MatchAllResult.php',
+        'Composer\\Pcre\\MatchAllStrictGroupsResult' => __DIR__ . '/..' . '/composer/pcre/src/MatchAllStrictGroupsResult.php',
+        'Composer\\Pcre\\MatchAllWithOffsetsResult' => __DIR__ . '/..' . '/composer/pcre/src/MatchAllWithOffsetsResult.php',
+        'Composer\\Pcre\\MatchResult' => __DIR__ . '/..' . '/composer/pcre/src/MatchResult.php',
+        'Composer\\Pcre\\MatchStrictGroupsResult' => __DIR__ . '/..' . '/composer/pcre/src/MatchStrictGroupsResult.php',
+        'Composer\\Pcre\\MatchWithOffsetsResult' => __DIR__ . '/..' . '/composer/pcre/src/MatchWithOffsetsResult.php',
+        'Composer\\Pcre\\PHPStan\\InvalidRegexPatternRule' => __DIR__ . '/..' . '/composer/pcre/src/PHPStan/InvalidRegexPatternRule.php',
+        'Composer\\Pcre\\PHPStan\\PregMatchFlags' => __DIR__ . '/..' . '/composer/pcre/src/PHPStan/PregMatchFlags.php',
+        'Composer\\Pcre\\PHPStan\\PregMatchParameterOutTypeExtension' => __DIR__ . '/..' . '/composer/pcre/src/PHPStan/PregMatchParameterOutTypeExtension.php',
+        'Composer\\Pcre\\PHPStan\\PregMatchTypeSpecifyingExtension' => __DIR__ . '/..' . '/composer/pcre/src/PHPStan/PregMatchTypeSpecifyingExtension.php',
+        'Composer\\Pcre\\PHPStan\\PregReplaceCallbackClosureTypeExtension' => __DIR__ . '/..' . '/composer/pcre/src/PHPStan/PregReplaceCallbackClosureTypeExtension.php',
+        'Composer\\Pcre\\PHPStan\\UnsafeStrictGroupsCallRule' => __DIR__ . '/..' . '/composer/pcre/src/PHPStan/UnsafeStrictGroupsCallRule.php',
+        'Composer\\Pcre\\PcreException' => __DIR__ . '/..' . '/composer/pcre/src/PcreException.php',
+        'Composer\\Pcre\\Preg' => __DIR__ . '/..' . '/composer/pcre/src/Preg.php',
+        'Composer\\Pcre\\Regex' => __DIR__ . '/..' . '/composer/pcre/src/Regex.php',
+        'Composer\\Pcre\\ReplaceResult' => __DIR__ . '/..' . '/composer/pcre/src/ReplaceResult.php',
+        'Composer\\Pcre\\UnexpectedNullMatchException' => __DIR__ . '/..' . '/composer/pcre/src/UnexpectedNullMatchException.php',
         'Cron\\AbstractField' => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron/AbstractField.php',
         'Cron\\CronExpression' => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron/CronExpression.php',
         'Cron\\DayOfMonthField' => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron/DayOfMonthField.php',
@@ -779,6 +816,13 @@ class ComposerStaticInitcc3e086eeaa58977e331ea486940cfc8
         'Cron\\MonthField' => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron/MonthField.php',
         'Database\\Factories\\UserFactory' => __DIR__ . '/../..' . '/database/factories/UserFactory.php',
         'Database\\Seeders\\DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeders/DatabaseSeeder.php',
+        'Database\\Seeders\\GrozaRindaSeeder' => __DIR__ . '/../..' . '/database/seeders/GrozaRindaSeeder.php',
+        'Database\\Seeders\\KategorijaSeeder' => __DIR__ . '/../..' . '/database/seeders/KategorijaSeeder.php',
+        'Database\\Seeders\\LietotajsSeeder' => __DIR__ . '/../..' . '/database/seeders/LietotajsSeeder.php',
+        'Database\\Seeders\\PasutijumsSeeder' => __DIR__ . '/../..' . '/database/seeders/PasutijumsSeeder.php',
+        'Database\\Seeders\\ProblemaSeeder' => __DIR__ . '/../..' . '/database/seeders/ProblemaSeeder.php',
+        'Database\\Seeders\\ProduktsSeeder' => __DIR__ . '/../..' . '/database/seeders/ProduktsSeeder.php',
+        'Database\\Seeders\\ZonaSeeder' => __DIR__ . '/../..' . '/database/seeders/ZonaSeeder.php',
         'DateError' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateError.php',
         'DateException' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateException.php',
         'DateInvalidOperationException' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateInvalidOperationException.php',
@@ -1551,6 +1595,33 @@ class ComposerStaticInitcc3e086eeaa58977e331ea486940cfc8
         'Filter\\FilterFailedException' => __DIR__ . '/..' . '/symfony/polyfill-php85/Resources/stubs/Filter/FilterFailedException.php',
         'Fruitcake\\Cors\\CorsService' => __DIR__ . '/..' . '/fruitcake/php-cors/src/CorsService.php',
         'Fruitcake\\Cors\\Exceptions\\InvalidOptionException' => __DIR__ . '/..' . '/fruitcake/php-cors/src/Exceptions/InvalidOptionException.php',
+        'FumeApp\\ModelTyper\\Actions\\BuildModelDetails' => __DIR__ . '/..' . '/fumeapp/modeltyper/src/Actions/BuildModelDetails.php',
+        'FumeApp\\ModelTyper\\Actions\\DetermineAccessorType' => __DIR__ . '/..' . '/fumeapp/modeltyper/src/Actions/DetermineAccessorType.php',
+        'FumeApp\\ModelTyper\\Actions\\GenerateCliOutput' => __DIR__ . '/..' . '/fumeapp/modeltyper/src/Actions/GenerateCliOutput.php',
+        'FumeApp\\ModelTyper\\Actions\\GenerateJsonOutput' => __DIR__ . '/..' . '/fumeapp/modeltyper/src/Actions/GenerateJsonOutput.php',
+        'FumeApp\\ModelTyper\\Actions\\Generator' => __DIR__ . '/..' . '/fumeapp/modeltyper/src/Actions/Generator.php',
+        'FumeApp\\ModelTyper\\Actions\\GetMappings' => __DIR__ . '/..' . '/fumeapp/modeltyper/src/Actions/GetMappings.php',
+        'FumeApp\\ModelTyper\\Actions\\GetModels' => __DIR__ . '/..' . '/fumeapp/modeltyper/src/Actions/GetModels.php',
+        'FumeApp\\ModelTyper\\Actions\\MapReturnType' => __DIR__ . '/..' . '/fumeapp/modeltyper/src/Actions/MapReturnType.php',
+        'FumeApp\\ModelTyper\\Actions\\MatchCase' => __DIR__ . '/..' . '/fumeapp/modeltyper/src/Actions/MatchCase.php',
+        'FumeApp\\ModelTyper\\Actions\\RunModelInspector' => __DIR__ . '/..' . '/fumeapp/modeltyper/src/Actions/RunModelInspector.php',
+        'FumeApp\\ModelTyper\\Actions\\WriteColumnAttribute' => __DIR__ . '/..' . '/fumeapp/modeltyper/src/Actions/WriteColumnAttribute.php',
+        'FumeApp\\ModelTyper\\Actions\\WriteCount' => __DIR__ . '/..' . '/fumeapp/modeltyper/src/Actions/WriteCount.php',
+        'FumeApp\\ModelTyper\\Actions\\WriteEnumConst' => __DIR__ . '/..' . '/fumeapp/modeltyper/src/Actions/WriteEnumConst.php',
+        'FumeApp\\ModelTyper\\Actions\\WriteExist' => __DIR__ . '/..' . '/fumeapp/modeltyper/src/Actions/WriteExist.php',
+        'FumeApp\\ModelTyper\\Actions\\WriteRelationship' => __DIR__ . '/..' . '/fumeapp/modeltyper/src/Actions/WriteRelationship.php',
+        'FumeApp\\ModelTyper\\Actions\\WriteSum' => __DIR__ . '/..' . '/fumeapp/modeltyper/src/Actions/WriteSum.php',
+        'FumeApp\\ModelTyper\\Commands\\ModelTyperCommand' => __DIR__ . '/..' . '/fumeapp/modeltyper/src/Commands/ModelTyperCommand.php',
+        'FumeApp\\ModelTyper\\Commands\\ShowModelTyperMappingsCommand' => __DIR__ . '/..' . '/fumeapp/modeltyper/src/Commands/ShowModelTyperMappingsCommand.php',
+        'FumeApp\\ModelTyper\\Constants\\TypescriptMappings' => __DIR__ . '/..' . '/fumeapp/modeltyper/src/Constants/TypescriptMappings.php',
+        'FumeApp\\ModelTyper\\Exceptions\\AbstractModelException' => __DIR__ . '/..' . '/fumeapp/modeltyper/src/Exceptions/AbstractModelException.php',
+        'FumeApp\\ModelTyper\\Exceptions\\CommandException' => __DIR__ . '/..' . '/fumeapp/modeltyper/src/Exceptions/CommandException.php',
+        'FumeApp\\ModelTyper\\Exceptions\\ModelTyperException' => __DIR__ . '/..' . '/fumeapp/modeltyper/src/Exceptions/ModelTyperException.php',
+        'FumeApp\\ModelTyper\\Listeners\\RunModelTyperCommand' => __DIR__ . '/..' . '/fumeapp/modeltyper/src/Listeners/RunModelTyperCommand.php',
+        'FumeApp\\ModelTyper\\ModelTyperServiceProvider' => __DIR__ . '/..' . '/fumeapp/modeltyper/src/ModelTyperServiceProvider.php',
+        'FumeApp\\ModelTyper\\Overrides\\ModelInspector' => __DIR__ . '/..' . '/fumeapp/modeltyper/src/Overrides/ModelInspector.php',
+        'FumeApp\\ModelTyper\\Traits\\ClassBaseName' => __DIR__ . '/..' . '/fumeapp/modeltyper/src/Traits/ClassBaseName.php',
+        'FumeApp\\ModelTyper\\Traits\\ModelRefClass' => __DIR__ . '/..' . '/fumeapp/modeltyper/src/Traits/ModelRefClass.php',
         'GrahamCampbell\\ResultType\\Error' => __DIR__ . '/..' . '/graham-campbell/result-type/src/Error.php',
         'GrahamCampbell\\ResultType\\Result' => __DIR__ . '/..' . '/graham-campbell/result-type/src/Result.php',
         'GrahamCampbell\\ResultType\\Success' => __DIR__ . '/..' . '/graham-campbell/result-type/src/Success.php',
