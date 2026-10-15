@@ -1,113 +1,102 @@
 <script setup>
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
+import { ref } from 'vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import MainLayout from '@/Layouts/MainLayout.vue';
 
 const form = useForm({
-    name: '',
-    email: '',
-    password: '',
-    password_confirmation: '',
+    vards: '',
+    uzvards: '',
+    e_pasts: '',
+    parole: '',
+    parole_confirmation: '',
 });
+
+const showPassword = ref(false);
 
 const submit = () => {
     form.post(route('register'), {
-        onFinish: () => form.reset('password', 'password_confirmation'),
+        onFinish: () => form.reset('parole', 'parole_confirmation'),
     });
 };
 </script>
 
 <template>
-    <GuestLayout>
-        <Head title="Register" />
+    <Head title="Reģistrēties" />
+    <MainLayout>
+        <v-container class="d-flex justify-center py-16">
+            <v-card class="pa-8 w-100" max-width="480">
+                <h1 class="text-h5 font-weight-bold mb-1">Izveidot kontu</h1>
+                <p class="text-body-2 text-medium-emphasis mb-6">
+                    Aizpildi datus, lai sāktu iepirkties.
+                </p>
 
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="name" value="Name" />
+                <form @submit.prevent="submit">
+                    <v-row dense>
+                        <v-col cols="12" sm="6">
+                            <v-text-field
+                                v-model="form.vards"
+                                label="Vārds"
+                                autocomplete="given-name"
+                                :error-messages="form.errors.vards"
+                                autofocus
+                            />
+                        </v-col>
+                        <v-col cols="12" sm="6">
+                            <v-text-field
+                                v-model="form.uzvards"
+                                label="Uzvārds"
+                                autocomplete="family-name"
+                                :error-messages="form.errors.uzvards"
+                            />
+                        </v-col>
+                    </v-row>
 
-                <TextInput
-                    id="name"
-                    type="text"
-                    class="mt-1 block w-full"
-                    v-model="form.name"
-                    required
-                    autofocus
-                    autocomplete="name"
-                />
+                    <v-text-field
+                        v-model="form.e_pasts"
+                        label="E-pasts"
+                        type="email"
+                        autocomplete="username"
+                        prepend-inner-icon="mdi-email-outline"
+                        :error-messages="form.errors.e_pasts"
+                    />
 
-                <InputError class="mt-2" :message="form.errors.name" />
-            </div>
+                    <v-text-field
+                        v-model="form.parole"
+                        label="Parole"
+                        :type="showPassword ? 'text' : 'password'"
+                        autocomplete="new-password"
+                        prepend-inner-icon="mdi-lock-outline"
+                        :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
+                        @click:append-inner="showPassword = !showPassword"
+                        :error-messages="form.errors.parole"
+                    />
 
-            <div class="mt-4">
-                <InputLabel for="email" value="Email" />
+                    <v-text-field
+                        v-model="form.parole_confirmation"
+                        label="Atkārtot paroli"
+                        :type="showPassword ? 'text' : 'password'"
+                        autocomplete="new-password"
+                        prepend-inner-icon="mdi-lock-check-outline"
+                        :error-messages="form.errors.parole_confirmation"
+                        class="mb-2"
+                    />
 
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    v-model="form.email"
-                    required
-                    autocomplete="username"
-                />
+                    <v-btn
+                        type="submit"
+                        color="primary"
+                        size="large"
+                        block
+                        :loading="form.processing"
+                    >
+                        Reģistrēties
+                    </v-btn>
+                </form>
 
-                <InputError class="mt-2" :message="form.errors.email" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel for="password" value="Password" />
-
-                <TextInput
-                    id="password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password"
-                    required
-                    autocomplete="new-password"
-                />
-
-                <InputError class="mt-2" :message="form.errors.password" />
-            </div>
-
-            <div class="mt-4">
-                <InputLabel
-                    for="password_confirmation"
-                    value="Confirm Password"
-                />
-
-                <TextInput
-                    id="password_confirmation"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password_confirmation"
-                    required
-                    autocomplete="new-password"
-                />
-
-                <InputError
-                    class="mt-2"
-                    :message="form.errors.password_confirmation"
-                />
-            </div>
-
-            <div class="mt-4 flex items-center justify-end">
-                <Link
-                    :href="route('login')"
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
-                >
-                    Already registered?
-                </Link>
-
-                <PrimaryButton
-                    class="ms-4"
-                    :class="{ 'opacity-25': form.processing }"
-                    :disabled="form.processing"
-                >
-                    Register
-                </PrimaryButton>
-            </div>
-        </form>
-    </GuestLayout>
+                <div class="text-center text-body-2 mt-6">
+                    Jau ir konts?
+                    <Link :href="route('login')" class="font-weight-bold">Pieslēgties</Link>
+                </div>
+            </v-card>
+        </v-container>
+    </MainLayout>
 </template>
