@@ -7,6 +7,13 @@ const features = [
     { icon: 'mdi-truck-fast-outline', text: 'Ātra piegāde' },
     { icon: 'mdi-shield-check-outline', text: 'Pārbaudīti produkti' },
 ];
+
+const zones = [
+    { title: 'Diski un riepas', icon: 'mdi-car-turbocharger', href: '/katalogs?zona=diski' },
+    { title: 'Stikli', icon: 'mdi-car-windshield-outline', href: '/katalogs?zona=stikli' },
+    { title: 'Salons', icon: 'mdi-car-seat', href: '/katalogs?zona=salons' },
+    { title: 'Krāsojums', icon: 'mdi-spray', href: '/katalogs?zona=krasojums' },
+];
 </script>
 
 <template>
@@ -69,6 +76,26 @@ const features = [
                 </v-col>
             </v-row>
         </v-container>
+        <!-- ZONES -->
+        <v-container style="max-width: 1280px" class="pb-16">
+            <div class="d-flex align-center justify-space-between mb-6">
+                <h2 class="text-h5 font-weight-bold">Izvēlies pēc zonas</h2>
+                <v-btn variant="text" href="/katalogs" append-icon="mdi-arrow-right">
+                    Visi produkti
+                </v-btn>
+            </div>
+
+            <v-row>
+                <v-col v-for="z in zones" :key="z.title" cols="6" md="3">
+                    <v-card :href="z.href" class="zone-card pa-6 text-center" variant="flat" border>
+                        <v-avatar color="secondary" size="72" class="mb-4">
+                            <v-icon :icon="z.icon" color="primary" size="36" />
+                        </v-avatar>
+                        <div class="text-subtitle-1 font-weight-medium">{{ z.title }}</div>
+                    </v-card>
+                </v-col>
+            </v-row>
+        </v-container>
     </MainLayout>
 </template>
 
@@ -82,5 +109,13 @@ const features = [
     border-radius: 50%;
     background: rgba(180, 248, 200, 0.08);
     border: 2px solid rgba(180, 248, 200, 0.25);
+}
+
+.zone-card {
+    transition: transform 0.2s, border-color 0.2s;
+}
+.zone-card:hover {
+    transform: translateY(-4px);
+    border-color: #b4f8c8;
 }
 </style>
