@@ -62,4 +62,9 @@ class Lietotajs extends Authenticatable
     {
         return $this->hasMany(Pasutijums::class, 'lietotaja_id', 'lietotaja_id');
     }
+
+    public function getRememberTokenName(): string
+    {
+        return '';
+    }
 }

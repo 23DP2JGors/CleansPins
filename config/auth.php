@@ -1,8 +1,9 @@
 <?php
 
-use App\Models\User;
+use App\Models\Lietotajs;
 
 return [
+    'model' => env('AUTH_MODEL', Lietotajs::class),
 
     /*
     |--------------------------------------------------------------------------
