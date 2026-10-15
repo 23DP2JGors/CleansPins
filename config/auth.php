@@ -3,7 +3,7 @@
 use App\Models\Lietotajs;
 
 return [
-    'model' => env('AUTH_MODEL', Lietotajs::class),
+    
 
     /*
     |--------------------------------------------------------------------------
@@ -65,7 +65,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', User::class),
+            'model' => env('AUTH_MODEL', Lietotajs::class),
         ],
 
         // 'users' => [

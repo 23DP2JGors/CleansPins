@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue';
-import { Link, usePage } from '@inertiajs/vue3';
+import { Link, usePage, router } from '@inertiajs/vue3';
 
 const page = usePage();
 const drawer = ref(false);
@@ -16,8 +16,9 @@ const links = [
 ];
 
 const isActive = (href) => currentUrl.value.startsWith(href);
-</script>
 
+const logout = () => router.post(route('logout'));
+</script>
 <template>
     <v-app>
         <!-- HEADER -->
@@ -65,16 +66,9 @@ const isActive = (href) => currentUrl.value.startsWith(href);
                     <template v-else>
                         <v-btn :href="route('dashboard')" variant="text" color="white">
                             <v-icon icon="mdi-account-circle-outline" start />
-                            {{ user.name }}
+                            {{ user.vards }}
                         </v-btn>
-                        <v-btn
-                            :href="route('logout')"
-                            method="post"
-                            as="button"
-                            color="primary"
-                            variant="flat"
-                            class="ml-2"
-                        >
+                        <v-btn color="primary" variant="flat" class="ml-2" @click="logout">
                             Iziet
                         </v-btn>
                     </template>
@@ -103,10 +97,10 @@ const isActive = (href) => currentUrl.value.startsWith(href);
                 />
                 <v-list-item
                     v-else
-                    :href="route('logout')"
                     title="Iziet"
                     prepend-icon="mdi-logout"
                     base-color="primary"
+                    @click="logout"
                 />
             </v-list>
         </v-navigation-drawer>
