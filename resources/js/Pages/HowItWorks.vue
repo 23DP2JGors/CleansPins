@@ -15,7 +15,7 @@ const steps = [
     <MainLayout>
         <section class="page-header">
             <v-container style="max-width: 1280px" class="py-12">
-                <h1 class="text-h4 text-md-h3 font-weight-bold text-white">
+                <h1 class="text-headline-large text-md-display-medium font-weight-bold text-white">
                     Kā tas <span class="text-primary">darbojas</span>
                 </h1>
                 <p class="text-white mt-3" style="opacity: 0.8; max-width: 520px">
@@ -32,10 +32,10 @@ const steps = [
                             <v-avatar color="primary" size="52">
                                 <v-icon :icon="s.icon" color="on-primary" size="28" />
                             </v-avatar>
-                            <span class="text-h4 font-weight-bold text-grey-lighten-1">0{{ i + 1 }}</span>
+                            <span class="text-headline-large font-weight-bold text-grey-lighten-1">0{{ i + 1 }}</span>
                         </div>
-                        <div class="text-subtitle-1 font-weight-bold mb-2">{{ s.title }}</div>
-                        <div class="text-body-2 text-medium-emphasis">{{ s.text }}</div>
+                        <div class="text-title-medium font-weight-bold mb-2">{{ s.title }}</div>
+                        <div class="text-body-medium text-medium-emphasis">{{ s.text }}</div>
                     </v-card>
                 </v-col>
             </v-row>

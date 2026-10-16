@@ -35,7 +35,7 @@ const year = new Date().getFullYear();
                 <!-- Logo -->
                 <Link href="/" class="text-decoration-none d-flex align-center ga-2">
                     <v-icon icon="mdi-car-wash" color="primary" size="28" />
-                    <span class="text-h6 font-weight-bold text-white" style="letter-spacing: 2px">
+                    <span class="text-title-large font-weight-bold text-white" style="letter-spacing: 2px">
                         AUTO <span class="text-primary">CARE</span>
                     </span>
                 </Link>
@@ -119,23 +119,23 @@ const year = new Date().getFullYear();
                     <v-col cols="12" md="5">
                         <div class="d-flex align-center ga-2 mb-3">
                             <v-icon icon="mdi-car-wash" color="primary" size="28" />
-                            <span class="text-h6 font-weight-bold text-white" style="letter-spacing: 2px">
+                            <span class="text-title-large font-weight-bold text-white" style="letter-spacing: 2px">
                                 AUTO <span class="text-primary">CARE</span>
                             </span>
                         </div>
-                        <p class="text-body-2 text-white" style="opacity: 0.7; max-width: 360px">
+                        <p class="text-body-medium text-white" style="opacity: 0.7; max-width: 360px">
                             Profesionāla auto kopšanas ķīmija. Atrodi īsto produktu savam auto pēc zonas vai problēmas.
                         </p>
                     </v-col>
 
                     <v-col cols="6" md="3">
-                        <div class="text-subtitle-2 font-weight-bold text-primary mb-3">Navigācija</div>
+                        <div class="text-title-small font-weight-bold text-primary mb-3">Navigācija</div>
                         <div class="d-flex flex-column ga-2">
                             <Link
                                 v-for="item in links"
                                 :key="item.href"
                                 :href="item.href"
-                                class="text-body-2 text-white text-decoration-none"
+                                class="text-body-medium text-white text-decoration-none"
                                 style="opacity: 0.8"
                             >
                                 {{ item.title }}
@@ -144,8 +144,8 @@ const year = new Date().getFullYear();
                     </v-col>
 
                     <v-col cols="6" md="4">
-                        <div class="text-subtitle-2 font-weight-bold text-primary mb-3">Kontakti</div>
-                        <div class="d-flex flex-column ga-2 text-body-2 text-white" style="opacity: 0.8">
+                        <div class="text-title-small font-weight-bold text-primary mb-3">Kontakti</div>
+                        <div class="d-flex flex-column ga-2 text-body-medium text-white" style="opacity: 0.8">
                             <span><v-icon icon="mdi-email-outline" size="16" class="mr-2" />info@autocare.lv</span>
                             <span><v-icon icon="mdi-phone-outline" size="16" class="mr-2" />+371 20000000</span>
                             <span><v-icon icon="mdi-map-marker-outline" size="16" class="mr-2" />Rīga, Latvija</span>
@@ -155,7 +155,7 @@ const year = new Date().getFullYear();
 
                 <v-divider class="my-6" style="opacity: 0.2" color="white" />
 
-                <div class="text-caption text-white text-center" style="opacity: 0.6">
+                <div class="text-body-small text-white text-center" style="opacity: 0.6">
                     © {{ year }} Auto Care. Visas tiesības aizsargātas.
                 </div>
             </v-container>

@@ -28,12 +28,12 @@ const zones = [
                             Auto kopšanas ķīmija
                         </v-chip>
 
-                        <h1 class="text-h3 text-md-h2 font-weight-bold text-white mb-4">
+                        <h1 class="text-display-medium text-md-display-large font-weight-bold text-white mb-4">
                             Tavs auto pelnījis
                             <span class="text-primary">spožumu</span>
                         </h1>
 
-                        <p class="text-body-1 text-white mb-8" style="opacity: 0.8; max-width: 520px">
+                        <p class="text-body-large text-white mb-8" style="opacity: 0.8; max-width: 520px">
                             Izvēlies produktus pēc zonas vai problēmas: diski, stikli, salons,
                             krāsojums. Mēs palīdzēsim atrast īsto risinājumu.
                         </p>
@@ -71,7 +71,7 @@ const zones = [
                         <v-avatar color="primary" size="48">
                             <v-icon :icon="f.icon" color="on-primary" />
                         </v-avatar>
-                        <span class="text-subtitle-1 font-weight-medium">{{ f.text }}</span>
+                        <span class="text-title-medium font-weight-medium">{{ f.text }}</span>
                     </v-card>
                 </v-col>
             </v-row>
@@ -79,7 +79,7 @@ const zones = [
         <!-- ZONES -->
         <v-container style="max-width: 1280px" class="pb-16">
             <div class="d-flex align-center justify-space-between mb-6">
-                <h2 class="text-h5 font-weight-bold">Izvēlies pēc zonas</h2>
+                <h2 class="text-headline-small font-weight-bold">Izvēlies pēc zonas</h2>
                 <v-btn variant="text" href="/katalogs" append-icon="mdi-arrow-right">
                     Visi produkti
                 </v-btn>
@@ -91,7 +91,7 @@ const zones = [
                         <v-avatar color="secondary" size="72" class="mb-4">
                             <v-icon :icon="z.icon" color="primary" size="36" />
                         </v-avatar>
-                        <div class="text-subtitle-1 font-weight-medium">{{ z.title }}</div>
+                        <div class="text-title-medium font-weight-medium">{{ z.title }}</div>
                     </v-card>
                 </v-col>
             </v-row>

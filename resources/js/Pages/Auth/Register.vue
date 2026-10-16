@@ -25,8 +25,8 @@ const submit = () => {
     <MainLayout>
         <v-container class="d-flex justify-center py-16">
             <v-card class="pa-8 w-100" max-width="480">
-                <h1 class="text-h5 font-weight-bold mb-1">Izveidot kontu</h1>
-                <p class="text-body-2 text-medium-emphasis mb-6">
+                <h1 class="text-headline-small font-weight-bold mb-1">Izveidot kontu</h1>
+                <p class="text-body-medium text-medium-emphasis mb-6">
                     Aizpildi datus, lai sāktu iepirkties.
                 </p>
 
@@ -92,7 +92,7 @@ const submit = () => {
                     </v-btn>
                 </form>
 
-                <div class="text-center text-body-2 mt-6">
+                <div class="text-center text-body-medium mt-6">
                     Jau ir konts?
                     <Link :href="route('login')" class="font-weight-bold">Pieslēgties</Link>
                 </div>
