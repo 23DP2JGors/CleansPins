@@ -1,18 +1,16 @@
 <script setup>
 import { Head } from '@inertiajs/vue3';
 import MainLayout from '@/Layouts/MainLayout.vue';
+import CarModel from '@/Components/CarModel.vue';
+
+defineProps({
+    zones: { type: Array, default: () => [] },
+});
 
 const features = [
     { icon: 'mdi-flask-outline', text: 'Profesionālā ķīmija' },
     { icon: 'mdi-truck-fast-outline', text: 'Ātra piegāde' },
     { icon: 'mdi-shield-check-outline', text: 'Pārbaudīti produkti' },
-];
-
-const zones = [
-    { title: 'Diski un riepas', icon: 'mdi-car-turbocharger', href: '/katalogs?zona=diski' },
-    { title: 'Stikli', icon: 'mdi-car-windshield-outline', href: '/katalogs?zona=stikli' },
-    { title: 'Salons', icon: 'mdi-car-seat', href: '/katalogs?zona=salons' },
-    { title: 'Krāsojums', icon: 'mdi-spray', href: '/katalogs?zona=krasojums' },
 ];
 </script>
 
@@ -28,7 +26,7 @@ const zones = [
                             Auto kopšanas ķīmija
                         </v-chip>
 
-                        <h1 class="text-display-medium text-md-display-large font-weight-bold text-white mb-4">
+                        <h1 class="text-display-small font-weight-bold text-white mb-4">
                             Tavs auto pelnījis
                             <span class="text-primary">spožumu</span>
                         </h1>
@@ -76,25 +74,34 @@ const zones = [
                 </v-col>
             </v-row>
         </v-container>
-        <!-- ZONES -->
-        <v-container style="max-width: 1280px" class="pb-16">
-            <div class="d-flex align-center justify-space-between mb-6">
-                <h2 class="text-headline-small font-weight-bold">Izvēlies pēc zonas</h2>
-                <v-btn variant="text" href="/katalogs" append-icon="mdi-arrow-right">
-                    Visi produkti
-                </v-btn>
-            </div>
 
-            <v-row>
-                <v-col v-for="z in zones" :key="z.title" cols="6" md="3">
-                    <v-card :href="z.href" class="zone-card pa-6 text-center" variant="flat" border>
-                        <v-avatar color="secondary" size="72" class="mb-4">
-                            <v-icon :icon="z.icon" color="primary" size="36" />
-                        </v-avatar>
-                        <div class="text-title-medium font-weight-medium">{{ z.title }}</div>
-                    </v-card>
-                </v-col>
-            </v-row>
+        <!-- INTERACTIVE CAR -->
+        <v-container style="max-width: 1280px" class="pb-16">
+            <v-card variant="flat" border class="pa-6 pa-md-10">
+                <v-row align="center">
+                    <v-col cols="12" md="5">
+                        <h2 class="text-headline-small font-weight-bold mb-3">
+                            Izvēlies auto daļu
+                        </h2>
+                        <p class="text-body-large text-medium-emphasis mb-6">
+                            Uzspied uz virsbūves, stikliem, salona, diskiem vai riepām, un mēs
+                            parādīsim produktus tieši šai zonai.
+                        </p>
+                        <v-btn
+                            variant="text"
+                            href="/katalogs"
+                            append-icon="mdi-arrow-right"
+                            class="px-0"
+                        >
+                            Visi produkti
+                        </v-btn>
+                    </v-col>
+
+                    <v-col cols="12" md="7">
+                        <CarModel :zones="zones" />
+                    </v-col>
+                </v-row>
+            </v-card>
         </v-container>
     </MainLayout>
 </template>
@@ -109,13 +116,5 @@ const zones = [
     border-radius: 50%;
     background: rgba(180, 248, 200, 0.08);
     border: 2px solid rgba(180, 248, 200, 0.25);
-}
-
-.zone-card {
-    transition: transform 0.2s, border-color 0.2s;
-}
-.zone-card:hover {
-    transform: translateY(-4px);
-    border-color: #b4f8c8;
 }
 </style>
