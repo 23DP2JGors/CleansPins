@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { Link, usePage, router } from '@inertiajs/vue3';
 
 const page = usePage();
@@ -7,6 +7,12 @@ const drawer = ref(false);
 
 const user = computed(() => page.props.auth?.user ?? null);
 const currentUrl = computed(() => page.url);
+
+const cartCount = computed(() => page.props.cart?.count ?? 0);
+
+const snackbar = ref(false);
+const snackText = ref('');
+const snackColor = ref('success');
 
 // Placeholder paths, to be replaced with route() calls once those routes exist
 const links = [
@@ -20,6 +26,21 @@ const isActive = (href) => currentUrl.value.startsWith(href);
 const logout = () => router.post(route('logout'));
 
 const year = new Date().getFullYear();
+
+watch(
+    () => page.props.flash,
+    (f) => {
+        if (f?.success) {
+            snackText.value = f.success;
+            snackColor.value = 'success';
+            snackbar.value = true;
+        } else if (f?.error) {
+            snackText.value = f.error;
+            snackColor.value = 'error';
+            snackbar.value = true;
+        }
+    },
+);
 </script>
 <template>
     <v-app>
@@ -53,6 +74,12 @@ const year = new Date().getFullYear();
                         as="a"
                     >
                         {{ item.title }}
+                    </v-btn>
+
+                    <v-btn :href="route('groza.index')" icon variant="text" color="white" class="ml-2">
+                        <v-badge :content="cartCount" :model-value="cartCount > 0" color="primary" floating>
+                            <v-icon icon="mdi-cart-outline" />
+                        </v-badge>
                     </v-btn>
 
                     <v-btn
@@ -89,6 +116,11 @@ const year = new Date().getFullYear();
                     :active="isActive(item.href)"
                     active-color="primary"
                 />
+                <v-list-item
+                    :href="route('groza.index')"
+                    :title="`Grozs${cartCount ? ' (' + cartCount + ')' : ''}`"
+                    prepend-icon="mdi-cart-outline"
+                />
                 <v-divider class="my-2" />
                 <v-list-item
                     v-if="!user"
@@ -111,6 +143,10 @@ const year = new Date().getFullYear();
         <v-main>
             <slot />
         </v-main>
+
+        <v-snackbar v-model="snackbar" :color="snackColor" timeout="2500" location="bottom right">
+            {{ snackText }}
+        </v-snackbar>
 
         <!-- FOOTER -->
         <v-footer color="secondary" class="pa-0">

@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
-import { Head, router } from '@inertiajs/vue3';
+import { Head, router, usePage } from '@inertiajs/vue3';
 import MainLayout from '@/Layouts/MainLayout.vue';
 
 const props = defineProps({
@@ -55,6 +55,26 @@ const clearAll = () => {
 };
 
 const price = (value) => `${Number(value).toFixed(2)} €`;
+
+const page = usePage();
+const adding = ref(null);
+
+const addToCart = (p) => {
+    if (!page.props.auth?.user) {
+        router.visit(route('login'));
+        return;
+    }
+    adding.value = p.produkta_id;
+    router.post(
+        route('groza.store'),
+        { produkta_id: p.produkta_id },
+        {
+            preserveScroll: true,
+            preserveState: true,
+            onFinish: () => (adding.value = null),
+        },
+    );
+};
 </script>
 
 <template>
@@ -176,15 +196,30 @@ const price = (value) => `${Number(value).toFixed(2)} €`;
                             <div class="text-title-medium font-weight-bold mb-1">{{ p.nosaukums }}</div>
                             <div class="text-body-medium text-medium-emphasis mb-4">{{ p.apraksts }}</div>
 
-                            <div class="d-flex align-center justify-space-between mt-auto">
-                                <span class="text-title-large font-weight-bold">{{ price(p.cena) }}</span>
-                                <v-chip
-                                    size="small"
-                                    :color="p.krajums > 0 ? 'success' : 'error'"
-                                    variant="tonal"
+                            <div class="mt-auto">
+                                <div class="d-flex align-center justify-space-between">
+                                    <span class="text-title-large font-weight-bold">{{ price(p.cena) }}</span>
+                                    <v-chip
+                                        size="small"
+                                        :color="p.krajums > 0 ? 'success' : 'error'"
+                                        variant="tonal"
+                                    >
+                                        {{ p.krajums > 0 ? 'Ir noliktavā' : 'Nav pieejams' }}
+                                    </v-chip>
+                                </div>
+
+                                <v-btn
+                                    block
+                                    color="primary"
+                                    class="mt-4 flex-grow-0"
+                                    height="44"
+                                    prepend-icon="mdi-cart-plus"
+                                    :disabled="p.krajums <= 0"
+                                    :loading="adding === p.produkta_id"
+                                    @click="addToCart(p)"
                                 >
-                                    {{ p.krajums > 0 ? 'Ir noliktavā' : 'Nav pieejams' }}
-                                </v-chip>
+                                    Pievienot grozam
+                                </v-btn>
                             </div>
                         </div>
                     </v-card>

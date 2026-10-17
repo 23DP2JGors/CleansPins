@@ -34,6 +34,15 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'cart' => [
+                'count' => fn () => $request->user()
+                    ? (int) \App\Models\GrozaRinda::where('lietotaja_id', $request->user()->lietotaja_id)->sum('daudzums')
+                    : 0,
+            ],
+            'flash' => [
+                'success' => fn () => $request->session()->get('success'),
+                'error' => fn () => $request->session()->get('error'),
+            ],
         ];
     }
 }

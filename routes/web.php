@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\KatalogsController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\GrozasController;
 use App\Models\Zona;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -26,6 +28,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/groza', [GrozasController::class, 'index'])->name('groza.index');
+    Route::post('/groza', [GrozasController::class, 'store'])->name('groza.store');
+    Route::patch('/groza/{rinda}', [GrozasController::class, 'update'])->name('groza.update');
+    Route::delete('/groza/{rinda}', [GrozasController::class, 'destroy'])->name('groza.destroy');
 });
 
 require __DIR__.'/auth.php';
