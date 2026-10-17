@@ -106,7 +106,7 @@ class ProduktsSeeder extends Seeder
                 'cena' => 9.40,
                 'krajums' => 32,
                 'kategorija' => 'Disku un riepu kopšana',
-                'zonas' => ['Diski'],
+                'zonas' => ['Diski', 'Riepas'],
                 'problemas' => [],
             ],
             [
@@ -124,7 +124,7 @@ class ProduktsSeeder extends Seeder
                 'cena' => 7.90,
                 'krajums' => 45,
                 'kategorija' => 'Stikla kopšana',
-                'zonas' => [],
+                'zonas' => ['Stikli'],
                 'problemas' => ['Kukaiņu pēdas uz priekšējā stikla'],
             ],
             [
@@ -133,7 +133,7 @@ class ProduktsSeeder extends Seeder
                 'cena' => 8.50,
                 'krajums' => 38,
                 'kategorija' => 'Stikla kopšana',
-                'zonas' => [],
+                'zonas' => ['Stikli'],
                 'problemas' => ['Apledojums uz stikla'],
             ],
             [
@@ -142,7 +142,7 @@ class ProduktsSeeder extends Seeder
                 'cena' => 9.90,
                 'krajums' => 60,
                 'kategorija' => 'Inventārs un piederumi',
-                'zonas' => [],
+                'zonas' => ['Virsbūve', 'Stikli'],
                 'problemas' => [],
             ],
             [

@@ -16,6 +16,8 @@ class ZonaSeeder extends Seeder
             'Virsbūve',
             'Salons',
             'Diski',
+            'Stikli',
+            'Riepas',
         ];
 
         foreach ($zonas as $nosaukums) {
