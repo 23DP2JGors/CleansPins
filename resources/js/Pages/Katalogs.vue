@@ -1,23 +1,58 @@
 <script setup>
-import { ref, computed } from 'vue';
-import { Head } from '@inertiajs/vue3';
+import { ref, computed, watch } from 'vue';
+import { Head, router } from '@inertiajs/vue3';
 import MainLayout from '@/Layouts/MainLayout.vue';
 
 const props = defineProps({
     products: { type: Array, default: () => [] },
+    total: { type: Number, default: 0 },
+    categories: { type: Array, default: () => [] },
+    zones: { type: Array, default: () => [] },
+    problems: { type: Array, default: () => [] },
+    filters: { type: Object, default: () => ({}) },
 });
 
-const search = ref('');
+const toNum = (v) => (v ? Number(v) : null);
 
-const filtered = computed(() => {
-    const q = search.value.trim().toLowerCase();
-    if (!q) return props.products;
-    return props.products.filter(
-        (p) =>
-            p.nosaukums.toLowerCase().includes(q) ||
-            (p.apraksts ?? '').toLowerCase().includes(q),
-    );
+const search = ref(props.filters.q ?? '');
+const kategorija = ref(toNum(props.filters.kategorija));
+const zona = ref(toNum(props.filters.zona));
+const problema = ref(toNum(props.filters.problema));
+
+const hasFilters = computed(
+    () => !!(search.value || kategorija.value || zona.value || problema.value),
+);
+
+const apply = () => {
+    const params = {};
+    if (search.value) params.q = search.value;
+    if (kategorija.value) params.kategorija = kategorija.value;
+    if (zona.value) params.zona = zona.value;
+    if (problema.value) params.problema = problema.value;
+
+    router.get(route('katalogs'), params, {
+        preserveState: true,
+        preserveScroll: true,
+        replace: true,
+    });
+};
+
+// search waits 300 ms after typing stops
+let timer;
+watch(search, () => {
+    clearTimeout(timer);
+    timer = setTimeout(apply, 300);
 });
+
+// selects apply immediately
+watch([kategorija, zona, problema], apply);
+
+const clearAll = () => {
+    search.value = '';
+    kategorija.value = null;
+    zona.value = null;
+    problema.value = null;
+};
 
 const price = (value) => `${Number(value).toFixed(2)} €`;
 </script>
@@ -31,25 +66,75 @@ const price = (value) => `${Number(value).toFixed(2)} €`;
                     <span class="text-primary">Katalogs</span>
                 </h1>
                 <p class="text-body-large text-white mt-3" style="opacity: 0.8">
-                    {{ products.length }} produkti auto kopšanai
+                    {{ products.length }} no {{ total }} produktiem
                 </p>
             </v-container>
         </section>
 
         <v-container style="max-width: 1280px" class="py-10">
-            <v-text-field
-                v-model="search"
-                placeholder="Meklēt produktu..."
-                prepend-inner-icon="mdi-magnify"
-                clearable
-                hide-details
-                class="mb-8"
-                style="max-width: 480px"
-            />
+            <!-- FILTERS -->
+            <v-card variant="flat" border class="pa-4 mb-8">
+                <v-row dense align="center">
+                    <v-col cols="12" md="3">
+                        <v-text-field
+                            v-model="search"
+                            placeholder="Meklēt produktu..."
+                            prepend-inner-icon="mdi-magnify"
+                            clearable
+                            hide-details
+                        />
+                    </v-col>
+                    <v-col cols="12" sm="4" md="3">
+                        <v-select
+                            v-model="kategorija"
+                            :items="categories"
+                            item-title="nosaukums"
+                            item-value="kategorijas_id"
+                            label="Kategorija"
+                            clearable
+                            hide-details
+                        />
+                    </v-col>
+                    <v-col cols="12" sm="4" md="2">
+                        <v-select
+                            v-model="zona"
+                            :items="zones"
+                            item-title="nosaukums"
+                            item-value="zonas_id"
+                            label="Zona"
+                            clearable
+                            hide-details
+                        />
+                    </v-col>
+                    <v-col cols="12" sm="4" md="4">
+                        <v-select
+                            v-model="problema"
+                            :items="problems"
+                            item-title="nosaukums"
+                            item-value="problemas_id"
+                            label="Problēma"
+                            clearable
+                            hide-details
+                        />
+                    </v-col>
+                </v-row>
 
-            <v-row v-if="filtered.length">
+                <div v-if="hasFilters" class="d-flex justify-end mt-3">
+                    <v-btn
+                        variant="text"
+                        size="small"
+                        prepend-icon="mdi-filter-remove-outline"
+                        @click="clearAll"
+                    >
+                        Notīrīt filtrus
+                    </v-btn>
+                </div>
+            </v-card>
+
+            <!-- PRODUCTS -->
+            <v-row v-if="products.length">
                 <v-col
-                    v-for="(p, i) in filtered"
+                    v-for="(p, i) in products"
                     :key="p.produkta_id"
                     cols="12"
                     sm="6"
@@ -108,7 +193,10 @@ const price = (value) => `${Number(value).toFixed(2)} €`;
 
             <div v-else class="text-center py-16 text-medium-emphasis">
                 <v-icon icon="mdi-magnify-close" size="48" class="mb-2" />
-                <div class="text-body-large">Nekas netika atrasts</div>
+                <div class="text-body-large mb-4">Nekas netika atrasts</div>
+                <v-btn v-if="hasFilters" variant="outlined" @click="clearAll">
+                    Notīrīt filtrus
+                </v-btn>
             </div>
         </v-container>
     </MainLayout>
@@ -125,7 +213,6 @@ const price = (value) => `${Number(value).toFixed(2)} €`;
     overflow: hidden;
 }
 
-/* cards fade and slide up one after another */
 .product-card {
     opacity: 0;
     animation: card-in 0.5s ease forwards;
@@ -138,7 +225,6 @@ const price = (value) => `${Number(value).toFixed(2)} €`;
     box-shadow: 0 12px 28px rgba(18, 35, 35, 0.12) !important;
 }
 
-/* image/icon zooms slightly on hover */
 .product-img-inner {
     transition: transform 0.35s ease;
 }
