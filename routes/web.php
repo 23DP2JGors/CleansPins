@@ -3,6 +3,7 @@
 use App\Http\Controllers\KatalogsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\GrozasController;
+use App\Http\Controllers\PasutijumiController;
 use App\Models\Zona;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -32,6 +33,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/groza', [GrozasController::class, 'store'])->name('groza.store');
     Route::patch('/groza/{rinda}', [GrozasController::class, 'update'])->name('groza.update');
     Route::delete('/groza/{rinda}', [GrozasController::class, 'destroy'])->name('groza.destroy');
+    Route::get('/pasutijums', [PasutijumiController::class, 'create'])->name('pasutijums.create');
+    Route::post('/pasutijums', [PasutijumiController::class, 'store'])->name('pasutijums.store');
+    Route::get('/pasutijums/{pasutijums}', [PasutijumiController::class, 'show'])->name('pasutijums.show');
 });
 
 require __DIR__.'/auth.php';
