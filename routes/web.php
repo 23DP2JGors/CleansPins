@@ -24,6 +24,9 @@ Route::get('/ka-tas-darbojas', function () {
     return Inertia::render('HowItWorks');
 })->name('how-it-works');
 
+// zonas vajadzīgas, jo katalogs filtrē pēc zonas_id (tāpat kā sākumlapas shēma)
+Route::get('/padomi', fn () => Inertia::render('Padomi', ['zones' => Zona::orderBy('zonas_id')->get()]))->name('padomi');
+
 Route::get('/katalogs', [KatalogsController::class, 'index'])->name('katalogs');
 
 // pakomātu meklēšana (JSON), pieejama bez autorizācijas
