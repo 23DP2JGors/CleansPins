@@ -101,12 +101,9 @@ const remove = (item) => {
                             <span>Kopā</span>
                             <span>{{ price(total) }}</span>
                         </div>
-                        <v-btn block size="large" color="primary" disabled>
+                        <v-btn block size="large" color="primary" :href="route('pasutijums.create')">
                             Noformēt pasūtījumu
                         </v-btn>
-                        <div class="text-body-small text-medium-emphasis text-center mt-2">
-                            Pasūtījuma noformēšana būs nākamajā solī
-                        </div>
                     </v-card>
                 </v-col>
             </v-row>
