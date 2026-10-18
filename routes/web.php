@@ -4,6 +4,7 @@ use App\Http\Controllers\KatalogsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\GrozasController;
 use App\Http\Controllers\PasutijumiController;
+use App\Http\Controllers\PakomatiController;
 use App\Models\Zona;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -24,6 +25,9 @@ Route::get('/ka-tas-darbojas', function () {
 })->name('how-it-works');
 
 Route::get('/katalogs', [KatalogsController::class, 'index'])->name('katalogs');
+
+// pakomātu meklēšana (JSON), pieejama bez autorizācijas
+Route::get('/pakomati', [PakomatiController::class, 'index'])->name('pakomati.index');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

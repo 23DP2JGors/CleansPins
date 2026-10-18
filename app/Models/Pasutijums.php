@@ -22,9 +22,16 @@ class Pasutijums extends Model
 
     protected $fillable = [
         'lietotaja_id',
+        'vards',
+        'uzvards',
+        'talrunis',
         'datums',
         'statuss',
         'piegades_adrese',
+        'pakomata_id',
+        'pakomata_pakalpojums',
+        'pakomata_nosaukums',
+        'pakomata_adrese',
         'kopsumma',
     ];
 
@@ -41,6 +48,11 @@ class Pasutijums extends Model
     public function lietotajs(): BelongsTo
     {
         return $this->belongsTo(Lietotajs::class, 'lietotaja_id', 'lietotaja_id');
+    }
+
+    public function pakomats(): BelongsTo
+    {
+        return $this->belongsTo(Pakomats::class, 'pakomata_id', 'pakomata_id');
     }
 
     public function rindas(): HasMany
