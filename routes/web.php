@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KatalogsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\GrozasController;
@@ -16,9 +17,8 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// "Mans konts" (e-pasta verifikācija netiek izmantota, tāpēc tikai 'auth')
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard');
 
 Route::get('/ka-tas-darbojas', function () {
     return Inertia::render('HowItWorks');

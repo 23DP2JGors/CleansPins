@@ -18,6 +18,7 @@ class Lietotajs extends Authenticatable
         'vards',
         'uzvards',
         'e_pasts',
+        'adrese',
         'parole',
         'loma', // 0 - pircējs, 1 - administrators
     ];
