@@ -140,4 +140,29 @@ class PasutijumiController extends Controller
 
         return Inertia::render('PasutijumsShow', ['order' => $pasutijums]);
     }
+
+    // pircējs atceļ savu pasūtījumu, kamēr tas vēl nav nosūtīts
+    public function atcelt(Request $request, Pasutijums $pasutijums): RedirectResponse
+    {
+        abort_if($pasutijums->lietotaja_id != $request->user()->lietotaja_id, 403);
+
+        $atcelts = DB::transaction(function () use ($pasutijums) {
+            // statusu pārbauda bloķētai rindai, lai admins to nepamainītu paralēli
+            $pasutijums = Pasutijums::lockForUpdate()->find($pasutijums->pasutijuma_id);
+
+            if (! in_array($pasutijums->statuss, Pasutijums::ATCELAMI_STATUSI, true)) {
+                return false;
+            }
+
+            $pasutijums->atcelt();
+
+            return true;
+        });
+
+        if (! $atcelts) {
+            return back()->with('error', 'Šo pasūtījumu vairs nevar atcelt.');
+        }
+
+        return back()->with('success', 'Pasūtījums atcelts.');
+    }
 }

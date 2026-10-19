@@ -2,21 +2,32 @@
 import { computed, ref } from 'vue';
 import { Head, router, useForm, usePage } from '@inertiajs/vue3';
 import MainLayout from '@/Layouts/MainLayout.vue';
+import ConfirmDialog from '@/Components/ConfirmDialog.vue';
+import AdminProdukti from '@/Components/Admin/AdminProdukti.vue';
+import AdminVardnica from '@/Components/Admin/AdminVardnica.vue';
+import AdminPasutijumi from '@/Components/Admin/AdminPasutijumi.vue';
+import AdminLietotaji from '@/Components/Admin/AdminLietotaji.vue';
 
-defineProps({
+const props = defineProps({
     pasutijumi: { type: Array, default: () => [] },
 });
 
 const page = usePage();
 const user = computed(() => page.props.auth.user);
 
-// aktīvā cilne: 'profils' | 'pasutijumi'
+// aktīvā cilne: 'profils' | 'pasutijumi' | 'admin'
 const tab = ref('profils');
 
-const navItems = [
+// "Administrēšana" redz tikai loma = 1 (pašus datus sargā 'admin' middleware)
+const isAdmin = computed(() => user.value.loma === 1);
+
+const navItems = computed(() => [
     { value: 'profils', title: 'Profils', icon: 'mdi-account-outline' },
     { value: 'pasutijumi', title: 'Pasūtījumi', icon: 'mdi-receipt-text-outline' },
-];
+    ...(isAdmin.value
+        ? [{ value: 'admin', title: 'Administrēšana', icon: 'mdi-shield-crown-outline' }]
+        : []),
+]);
 
 const logout = () => router.post(route('logout'));
 
@@ -80,6 +91,7 @@ const statusColors = {
     'apstrādē': 'warning',
     'nosūtīts': 'primary',
     'piegādāts': 'success',
+    atcelts: 'error',
 };
 const statusColor = (s) => statusColors[s] ?? 'secondary';
 
@@ -101,6 +113,59 @@ const orderDialog = computed({
         if (!open) selectedOrder.value = null;
     },
 });
+
+// "Aktuālie" — vēl ceļā; "Vēsture" — piegādāti vai atcelti
+const closedStatuses = ['piegādāts', 'atcelts'];
+const ordersTab = ref('aktualie');
+const activeOrders = computed(() => props.pasutijumi.filter((o) => !closedStatuses.includes(o.statuss)));
+const historyOrders = computed(() => props.pasutijumi.filter((o) => closedStatuses.includes(o.statuss)));
+const shownOrders = computed(() => (ordersTab.value === 'aktualie' ? activeOrders.value : historyOrders.value));
+
+// --- Pasūtījuma atcelšana (tikai "jauns" / "apstrādē"; serveris pārbauda vēlreiz) ---
+
+const canCancel = (o) => ['jauns', 'apstrādē'].includes(o.statuss);
+
+const toCancel = ref(null);
+const cancelling = ref(false);
+const cancelDialog = computed({
+    get: () => toCancel.value !== null,
+    set: (open) => {
+        if (!open) toCancel.value = null;
+    },
+});
+
+const cancelOrder = () =>
+    router.post(
+        route('pasutijums.atcelt', toCancel.value.pasutijuma_id),
+        {},
+        {
+            preserveScroll: true,
+            preserveState: true,
+            onStart: () => (cancelling.value = true),
+            onFinish: () => {
+                cancelling.value = false;
+                toCancel.value = null;
+                selectedOrder.value = null; // saraksts ielādēts no jauna — vecais objekts vairs nav aktuāls
+            },
+        },
+    );
+
+// --- Administrēšana ---
+
+const adminTab = ref('produkti');
+const adminTabs = [
+    { value: 'produkti', title: 'Produkti', icon: 'mdi-package-variant-closed' },
+    { value: 'vardnicas', title: 'Kategorijas / Zonas / Problēmas', icon: 'mdi-shape-outline' },
+    { value: 'pasutijumi', title: 'Pasūtījumi', icon: 'mdi-receipt-text-outline' },
+    { value: 'lietotaji', title: 'Lietotāji', icon: 'mdi-account-group-outline' },
+];
+
+const vardnica = ref('kategorijas');
+const vardnicas = {
+    kategorijas: { idKey: 'kategorijas_id', nosaukums: 'Kategorija', arAprakstu: true, maxlength: 255 },
+    zonas: { idKey: 'zonas_id', nosaukums: 'Zona', arAprakstu: false, maxlength: 100 },
+    problemas: { idKey: 'problemas_id', nosaukums: 'Problēma', arAprakstu: false, maxlength: 100 },
+};
 </script>
 
 <template>
@@ -122,7 +187,7 @@ const orderDialog = computed({
                 <!-- NAVIGĀCIJA: mobilajā — horizontālas cilnes -->
                 <v-col cols="12" class="d-sm-none">
                     <v-card variant="flat" border>
-                        <v-tabs v-model="tab" color="secondary" grow>
+                        <v-tabs v-model="tab" color="secondary" grow show-arrows>
                             <v-tab v-for="item in navItems" :key="item.value" :value="item.value" :prepend-icon="item.icon">
                                 {{ item.title }}
                             </v-tab>
@@ -196,29 +261,92 @@ const orderDialog = computed({
                                     </v-btn>
                                 </div>
 
-                                <v-list v-else lines="two" class="pa-0" aria-label="Pasūtījumu saraksts">
-                                    <template v-for="(o, i) in pasutijumi" :key="o.pasutijuma_id">
-                                        <v-divider v-if="i > 0" />
-                                        <v-list-item class="px-2" @click="selectedOrder = o">
-                                            <v-list-item-title class="font-weight-bold">
-                                                Pasūtījums #{{ o.pasutijuma_id }}
-                                            </v-list-item-title>
-                                            <v-list-item-subtitle>{{ date(o.datums) }}</v-list-item-subtitle>
+                                <template v-else>
+                                    <v-tabs v-model="ordersTab" color="secondary" density="compact" class="mb-2">
+                                        <v-tab value="aktualie">Aktuālie ({{ activeOrders.length }})</v-tab>
+                                        <v-tab value="vesture">Vēsture ({{ historyOrders.length }})</v-tab>
+                                    </v-tabs>
 
-                                            <template #append>
-                                                <div class="d-flex align-center flex-wrap justify-end ga-3">
-                                                    <v-chip :color="statusColor(o.statuss)" variant="flat" size="small">
-                                                        {{ o.statuss }}
-                                                    </v-chip>
-                                                    <span class="text-body-large font-weight-medium">
-                                                        {{ price(o.kopsumma) }}
-                                                    </span>
-                                                    <v-icon icon="mdi-chevron-right" class="d-none d-md-inline-flex" />
-                                                </div>
-                                            </template>
-                                        </v-list-item>
-                                    </template>
-                                </v-list>
+                                    <p v-if="shownOrders.length === 0" class="text-body-large text-medium-emphasis text-center py-8">
+                                        {{ ordersTab === 'aktualie' ? 'Aktuālu pasūtījumu nav.' : 'Vēsturē vēl nav neviena pasūtījuma.' }}
+                                    </p>
+
+                                    <v-list v-else lines="two" class="pa-0" aria-label="Pasūtījumu saraksts">
+                                        <template v-for="(o, i) in shownOrders" :key="o.pasutijuma_id">
+                                            <v-divider v-if="i > 0" />
+                                            <v-list-item class="px-2" @click="selectedOrder = o">
+                                                <v-list-item-title class="font-weight-bold">
+                                                    Pasūtījums #{{ o.pasutijuma_id }}
+                                                </v-list-item-title>
+                                                <v-list-item-subtitle>{{ date(o.datums) }}</v-list-item-subtitle>
+
+                                                <template #append>
+                                                    <div class="d-flex align-center flex-wrap justify-end ga-3">
+                                                        <v-chip :color="statusColor(o.statuss)" variant="flat" size="small">
+                                                            {{ o.statuss }}
+                                                        </v-chip>
+                                                        <span class="text-body-large font-weight-medium">
+                                                            {{ price(o.kopsumma) }}
+                                                        </span>
+                                                        <v-btn
+                                                            v-if="canCancel(o)"
+                                                            icon="mdi-close-circle-outline"
+                                                            variant="text"
+                                                            size="small"
+                                                            color="error"
+                                                            aria-label="Atcelt pasūtījumu"
+                                                            @click.stop="toCancel = o"
+                                                        />
+                                                        <v-icon icon="mdi-chevron-right" class="d-none d-md-inline-flex" />
+                                                    </div>
+                                                </template>
+                                            </v-list-item>
+                                        </template>
+                                    </v-list>
+                                </template>
+                            </v-card>
+                        </v-window-item>
+
+                        <!-- ADMINISTRĒŠANA (tikai loma = 1; katra apakšcilne ielādē datus, kad pirmo reizi atvērta) -->
+                        <v-window-item v-if="isAdmin" value="admin">
+                            <v-card variant="flat" border class="pa-6">
+                                <h2 class="text-title-large font-weight-bold mb-4">Administrēšana</h2>
+
+                                <v-tabs v-model="adminTab" color="secondary" density="compact" show-arrows class="mb-6">
+                                    <v-tab v-for="t in adminTabs" :key="t.value" :value="t.value" :prepend-icon="t.icon">
+                                        {{ t.title }}
+                                    </v-tab>
+                                </v-tabs>
+
+                                <v-window v-model="adminTab">
+                                    <v-window-item value="produkti">
+                                        <AdminProdukti />
+                                    </v-window-item>
+
+                                    <v-window-item value="vardnicas">
+                                        <v-btn-toggle
+                                            v-model="vardnica"
+                                            mandatory
+                                            color="secondary"
+                                            variant="outlined"
+                                            density="comfortable"
+                                            class="mb-4"
+                                        >
+                                            <v-btn value="kategorijas">Kategorijas</v-btn>
+                                            <v-btn value="zonas">Zonas</v-btn>
+                                            <v-btn value="problemas">Problēmas</v-btn>
+                                        </v-btn-toggle>
+                                        <AdminVardnica :key="vardnica" :resurss="vardnica" v-bind="vardnicas[vardnica]" />
+                                    </v-window-item>
+
+                                    <v-window-item value="pasutijumi">
+                                        <AdminPasutijumi :status-color="statusColor" :price="price" :date="date" />
+                                    </v-window-item>
+
+                                    <v-window-item value="lietotaji">
+                                        <AdminLietotaji />
+                                    </v-window-item>
+                                </v-window>
                             </v-card>
                         </v-window-item>
                     </v-window>
@@ -367,11 +495,30 @@ const orderDialog = computed({
                 </v-card-text>
 
                 <v-card-actions class="pa-6 pt-0">
+                    <v-btn
+                        v-if="canCancel(selectedOrder)"
+                        color="error"
+                        variant="outlined"
+                        prepend-icon="mdi-close-circle-outline"
+                        @click="toCancel = selectedOrder"
+                    >
+                        Atcelt pasūtījumu
+                    </v-btn>
                     <v-spacer />
                     <v-btn variant="text" @click="orderDialog = false">Aizvērt</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
+
+        <!-- DIALOGS: pasūtījuma atcelšanas apstiprinājums -->
+        <ConfirmDialog
+            v-model="cancelDialog"
+            :title="`Atcelt pasūtījumu #${toCancel?.pasutijuma_id ?? ''}?`"
+            text="Pasūtījums tiks atcelts, un preces atgriezīsies noliktavā. Šo darbību nevar atsaukt."
+            confirm-text="Atcelt pasūtījumu"
+            :loading="cancelling"
+            @confirm="cancelOrder"
+        />
     </MainLayout>
 </template>
 

@@ -14,7 +14,7 @@ return new class extends Migration
                 ->constrained('lietotaji', 'lietotaja_id')
                 ->restrictOnDelete();
             $table->dateTime('datums')->useCurrent();
-            $table->string('statuss', 30)->default('jauns'); // jauns, apstrādē, nosūtīts, piegādāts
+            $table->string('statuss', 30)->default('jauns'); // jauns, apstrādē, nosūtīts, piegādāts, atcelts (sk. Pasutijums::STATUSI)
             $table->string('piegades_adrese', 255);
             $table->decimal('kopsumma', 8, 2)->default(0);
             $table->timestamps();
