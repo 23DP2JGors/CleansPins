@@ -2,58 +2,9 @@
 
 use App\Models\Kategorija;
 use App\Models\Lietotajs;
-use App\Models\PasutijumaRinda;
 use App\Models\Pasutijums;
 use App\Models\Produkts;
 use App\Models\Zona;
-
-function lietotajs(int $loma = 0): Lietotajs
-{
-    static $n = 0;
-    $n++;
-
-    return Lietotajs::create([
-        'vards' => 'Testa',
-        'uzvards' => 'Lietotājs' . $n,
-        'e_pasts' => "test{$n}@piemers.lv",
-        'parole' => 'Parole123!',
-        'loma' => $loma,
-    ]);
-}
-
-function produkts(int $krajums = 10): Produkts
-{
-    $kategorija = Kategorija::create(['nosaukums' => 'Šampūni']);
-
-    return Produkts::create([
-        'kategorijas_id' => $kategorija->kategorijas_id,
-        'nosaukums' => 'Auto šampūns',
-        'cena' => 9.99,
-        'krajums' => $krajums,
-    ]);
-}
-
-function pasutijums(Lietotajs $lietotajs, string $statuss, ?Produkts $produkts = null, int $daudzums = 2): Pasutijums
-{
-    $pasutijums = Pasutijums::create([
-        'lietotaja_id' => $lietotajs->lietotaja_id,
-        'datums' => now(),
-        'statuss' => $statuss,
-        'piegades_adrese' => 'Omniva pakomāts: Tests, Rīga',
-        'kopsumma' => 0,
-    ]);
-
-    if ($produkts) {
-        PasutijumaRinda::create([
-            'pasutijuma_id' => $pasutijums->pasutijuma_id,
-            'produkta_id' => $produkts->produkta_id,
-            'daudzums' => $daudzums,
-            'cena_bridi' => $produkts->cena,
-        ]);
-    }
-
-    return $pasutijums;
-}
 
 // --- Piekļuve ---
 

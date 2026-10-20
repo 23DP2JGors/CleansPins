@@ -47,6 +47,17 @@ class Lietotajs extends Authenticatable
         return 'parole';
     }
 
+    // Paroles atjaunošanas saitei (token tabula un e-pasta adresāts) vajag "e_pasts", nevis "email"
+    public function getEmailForPasswordReset(): string
+    {
+        return $this->e_pasts;
+    }
+
+    public function routeNotificationForMail(): string
+    {
+        return $this->e_pasts;
+    }
+
     public function isAdministrators(): bool
     {
         return (int) $this->loma === 1;

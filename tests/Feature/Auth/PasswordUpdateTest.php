@@ -1,10 +1,10 @@
 <?php
 
-use App\Models\User;
+use App\Models\Lietotajs;
 use Illuminate\Support\Facades\Hash;
 
 test('password can be updated', function () {
-    $user = User::factory()->create();
+    $user = Lietotajs::factory()->create();
 
     $response = $this
         ->actingAs($user)
@@ -19,11 +19,11 @@ test('password can be updated', function () {
         ->assertSessionHasNoErrors()
         ->assertRedirect('/profile');
 
-    $this->assertTrue(Hash::check('new-password', $user->refresh()->password));
+    $this->assertTrue(Hash::check('new-password', $user->refresh()->parole));
 });
 
 test('correct password must be provided to update password', function () {
-    $user = User::factory()->create();
+    $user = Lietotajs::factory()->create();
 
     $response = $this
         ->actingAs($user)

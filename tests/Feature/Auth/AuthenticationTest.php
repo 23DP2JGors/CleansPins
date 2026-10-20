@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\User;
+use App\Models\Lietotajs;
 
 test('login screen can be rendered', function () {
     $response = $this->get('/login');
@@ -9,30 +9,30 @@ test('login screen can be rendered', function () {
 });
 
 test('users can authenticate using the login screen', function () {
-    $user = User::factory()->create();
+    $user = Lietotajs::factory()->create();
 
     $response = $this->post('/login', [
-        'email' => $user->email,
-        'password' => 'password',
+        'e_pasts' => $user->e_pasts,
+        'parole' => 'password',
     ]);
 
-    $this->assertAuthenticated();
-    $response->assertRedirect(route('dashboard', absolute: false));
+    $this->assertAuthenticatedAs($user);
+    $response->assertRedirect(route('home', absolute: false));
 });
 
 test('users can not authenticate with invalid password', function () {
-    $user = User::factory()->create();
+    $user = Lietotajs::factory()->create();
 
     $this->post('/login', [
-        'email' => $user->email,
-        'password' => 'wrong-password',
-    ]);
+        'e_pasts' => $user->e_pasts,
+        'parole' => 'wrong-password',
+    ])->assertSessionHasErrors('e_pasts');
 
     $this->assertGuest();
 });
 
 test('users can logout', function () {
-    $user = User::factory()->create();
+    $user = Lietotajs::factory()->create();
 
     $response = $this->actingAs($user)->post('/logout');
 

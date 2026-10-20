@@ -1,9 +1,9 @@
 <?php
 
-use App\Models\User;
+use App\Models\Lietotajs;
 
 test('profile page is displayed', function () {
-    $user = User::factory()->create();
+    $user = Lietotajs::factory()->create();
 
     $response = $this
         ->actingAs($user)
@@ -13,13 +13,16 @@ test('profile page is displayed', function () {
 });
 
 test('profile information can be updated', function () {
-    $user = User::factory()->create();
+    $user = Lietotajs::factory()->create();
 
     $response = $this
         ->actingAs($user)
+        ->from('/profile')
         ->patch('/profile', [
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'vards' => 'Jānis',
+            'uzvards' => 'Bērziņš',
+            'e_pasts' => 'janis@piemers.lv',
+            'adrese' => 'Brīvības iela 1, Rīga',
         ]);
 
     $response
@@ -28,30 +31,37 @@ test('profile information can be updated', function () {
 
     $user->refresh();
 
-    $this->assertSame('Test User', $user->name);
-    $this->assertSame('test@example.com', $user->email);
-    $this->assertNull($user->email_verified_at);
+    $this->assertSame('Jānis', $user->vards);
+    $this->assertSame('Bērziņš', $user->uzvards);
+    $this->assertSame('janis@piemers.lv', $user->e_pasts);
+    $this->assertSame('Brīvības iela 1, Rīga', $user->adrese);
 });
 
-test('email verification status is unchanged when the email address is unchanged', function () {
-    $user = User::factory()->create();
+test('profile keeps its own e-mail but cannot take another users e-mail', function () {
+    $user = Lietotajs::factory()->create();
+    $cits = Lietotajs::factory()->create();
 
-    $response = $this
-        ->actingAs($user)
+    $this->actingAs($user)
+        ->from('/profile')
         ->patch('/profile', [
-            'name' => 'Test User',
-            'email' => $user->email,
-        ]);
+            'vards' => $user->vards,
+            'uzvards' => $user->uzvards,
+            'e_pasts' => $user->e_pasts,
+        ])
+        ->assertSessionHasNoErrors();
 
-    $response
-        ->assertSessionHasNoErrors()
-        ->assertRedirect('/profile');
-
-    $this->assertNotNull($user->refresh()->email_verified_at);
+    $this->actingAs($user)
+        ->from('/profile')
+        ->patch('/profile', [
+            'vards' => $user->vards,
+            'uzvards' => $user->uzvards,
+            'e_pasts' => $cits->e_pasts,
+        ])
+        ->assertSessionHasErrors('e_pasts');
 });
 
 test('user can delete their account', function () {
-    $user = User::factory()->create();
+    $user = Lietotajs::factory()->create();
 
     $response = $this
         ->actingAs($user)
@@ -68,7 +78,7 @@ test('user can delete their account', function () {
 });
 
 test('correct password must be provided to delete account', function () {
-    $user = User::factory()->create();
+    $user = Lietotajs::factory()->create();
 
     $response = $this
         ->actingAs($user)
