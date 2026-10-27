@@ -62,4 +62,17 @@ class Lietotajs extends Authenticatable
     {
         return $this->hasMany(Pasutijums::class, 'lietotaja_id', 'lietotaja_id');
     }
+
+    public function dzestSavosPasutijumus(): void
+    {
+        $this->deleteOwnOrders();
+    }
+
+    public function deleteOwnOrders(): void
+    {
+        $this->pasutijumi()->with('rindas')->get()->each(function (Pasutijums $pasutijums): void {
+            $pasutijums->rindas()->delete();
+            $pasutijums->delete();
+        });
+    }
 }

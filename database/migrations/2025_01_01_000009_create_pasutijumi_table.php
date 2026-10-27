@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id('pasutijuma_id');
             $table->foreignId('lietotaja_id')
                 ->constrained('lietotaji', 'lietotaja_id')
-                ->restrictOnDelete();
+                ->cascadeOnDelete();
             $table->dateTime('datums')->useCurrent();
             $table->string('statuss', 30)->default('jauns'); // jauns, apstrādē, nosūtīts, piegādāts
             $table->string('piegades_adrese', 255);
