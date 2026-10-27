@@ -45,11 +45,6 @@ class Lietotajs extends Authenticatable
         ];
     }
 
-    public function getAuthIdentifierName(): string
-    {
-        return 'e_pasts';
-    }
-
     public function getEmailForPasswordReset(): string
     {
         return $this->e_pasts;
