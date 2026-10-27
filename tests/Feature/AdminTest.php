@@ -137,7 +137,7 @@ test('administrators var dzēst citu pircēju un padarīt citu par adminu', func
     expect(Lietotajs::find($pircejs->lietotaja_id))->toBeNull();
 });
 
-test('lietotāju ar pasūtījumiem nevar dzēst', function () {
+test('lietotāju ar aktīviem pasūtījumiem nevar dzēst', function () {
     $admin = lietotajs(1);
     $pircejs = lietotajs(0);
     pasutijums($pircejs, Pasutijums::STATUS_PIEGADATS);
@@ -146,6 +146,42 @@ test('lietotāju ar pasūtījumiem nevar dzēst', function () {
         ->deleteJson("/admin/lietotaji/{$pircejs->lietotaja_id}")
         ->assertStatus(422)
         ->assertJsonValidationErrors('dzest');
+});
+
+test('lietotāju ar atceltiem un aktīviem pasūtījumiem nevar dzēst', function () {
+    $admin = lietotajs(1);
+    $pircejs = lietotajs(0);
+    pasutijums($pircejs, Pasutijums::STATUS_ATCELTS);
+    pasutijums($pircejs, Pasutijums::STATUS_JAUNS);
+
+    $this->actingAs($admin)
+        ->deleteJson("/admin/lietotaji/{$pircejs->lietotaja_id}")
+        ->assertStatus(422)
+        ->assertJsonValidationErrors('dzest');
+
+    expect($pircejs->fresh())->not->toBeNull()
+        ->and($pircejs->pasutijumi()->count())->toBe(2);
+});
+
+test('lietotāju ar tikai atceltiem pasūtījumiem var dzēst, pasūtījumi paliek vēsturē', function () {
+    $admin = lietotajs(1);
+    $pircejs = lietotajs(0);
+    $p = pasutijums($pircejs, Pasutijums::STATUS_ATCELTS, produkts(), 2);
+
+    $this->actingAs($admin)
+        ->delete("/admin/lietotaji/{$pircejs->lietotaja_id}")
+        ->assertSessionHasNoErrors();
+
+    expect(Lietotajs::find($pircejs->lietotaja_id))->toBeNull()
+        ->and($p->fresh())->not->toBeNull()
+        ->and($p->fresh()->lietotaja_id)->toBeNull()
+        ->and($p->rindas()->count())->toBe(1);
+
+    // admina pasūtījumu sarakstā redzams ar lietotajs = null
+    $this->actingAs($admin)->getJson('/admin/pasutijumi')
+        ->assertOk()
+        ->assertJsonPath('pasutijumi.data.0.pasutijuma_id', $p->pasutijuma_id)
+        ->assertJsonPath('pasutijumi.data.0.lietotajs', null);
 });
 
 // --- Pasūtījumu statuss (admins) ---

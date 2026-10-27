@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\LietotajsRequest;
 use App\Models\Lietotajs;
+use App\Models\Pasutijums;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -74,14 +75,15 @@ class LietotajuController extends Controller
             ]);
         }
 
-        // pasutijumi → restrictOnDelete: pasūtījumu vēsture jāsaglabā
-        if ($lietotaji->pasutijumi()->exists()) {
+        // dzēst drīkst tikai tad, ja visi pasūtījumi ir atcelti
+        if ($lietotaji->pasutijumi()->where('statuss', '!=', Pasutijums::STATUS_ATCELTS)->exists()) {
             throw ValidationException::withMessages([
-                'dzest' => 'Lietotāju ar pasūtījumiem nevar dzēst.',
+                'dzest' => 'Lietotāju ar aktīviem pasūtījumiem nevar dzēst.',
             ]);
         }
 
-        $lietotaji->delete(); // groza rindas dzēšas kaskādē
+        // groza rindas dzēšas kaskādē; atceltie pasutijumi paliek vēsturē (lietotaja_id → null)
+        $lietotaji->delete();
 
         return back()->with('success', 'Lietotājs dzēsts.');
     }

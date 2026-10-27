@@ -106,7 +106,18 @@ const changeStatus = (order, statuss) => {
                 hide-details
                 clearable
                 style="min-width: 220px; max-width: 280px"
-            />
+            >
+                <template #selection="{ internalItem: s }">
+                    <v-chip :color="props.statusColor(s.value)" variant="flat" size="small">{{ s.title }}</v-chip>
+                </template>
+                <template #item="{ internalItem: s, props: itemProps }">
+                    <v-list-item v-bind="itemProps">
+                        <template #title>
+                            <v-chip :color="props.statusColor(s.value)" variant="flat" size="small">{{ s.title }}</v-chip>
+                        </template>
+                    </v-list-item>
+                </template>
+            </v-select>
             <v-spacer />
             <span class="text-body-medium text-medium-emphasis">Kopā: {{ total }}</span>
         </div>
@@ -146,7 +157,9 @@ const changeStatus = (order, statuss) => {
                 <span class="text-no-wrap">{{ props.date(item.datums) }}</span>
             </template>
             <template #item.lietotajs="{ item }">
-                {{ item.lietotajs ? `${item.lietotajs.vards} ${item.lietotajs.uzvards}` : '—' }}
+                <template v-if="item.lietotajs">{{ item.lietotajs.vards }} {{ item.lietotajs.uzvards }}</template>
+                <!-- konts dzēsts (lietotaja_id = null) — pasūtījums paliek vēsturē -->
+                <span v-else class="text-medium-emphasis">— <span class="text-body-small">(konts dzēsts)</span></span>
             </template>
             <template #item.kopsumma="{ item }">
                 <span class="text-no-wrap">{{ props.price(item.kopsumma) }}</span>
@@ -162,8 +175,16 @@ const changeStatus = (order, statuss) => {
                     aria-label="Pasūtījuma statuss"
                     @update:model-value="(s) => changeStatus(item, s)"
                 >
-                    <template #selection="{ item: s }">
+                    <!-- Vuetify 4: "item" ir neapstrādātā vērtība (string), value/title ir internalItem -->
+                    <template #selection="{ internalItem: s }">
                         <v-chip :color="props.statusColor(s.value)" variant="flat" size="small">{{ s.title }}</v-chip>
+                    </template>
+                    <template #item="{ internalItem: s, props: itemProps }">
+                        <v-list-item v-bind="itemProps">
+                            <template #title>
+                                <v-chip :color="props.statusColor(s.value)" variant="flat" size="small">{{ s.title }}</v-chip>
+                            </template>
+                        </v-list-item>
                     </template>
                 </v-select>
             </template>

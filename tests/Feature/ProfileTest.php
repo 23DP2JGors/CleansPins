@@ -85,6 +85,23 @@ test('user can delete their account', function () {
     $this->assertNull($user->fresh());
 });
 
+test('deleting account also deletes own orders', function () {
+    $user = Lietotajs::factory()->create([
+        'parole' => Hash::make('password'),
+    ]);
+    $order = pasutijums($user, Pasutijums::STATUS_JAUNS, produkts(), 1);
+
+    $this->actingAs($user)
+        ->delete('/profile', ['password' => 'password'])
+        ->assertSessionHasNoErrors()
+        ->assertRedirect('/');
+
+    $this->assertGuest();
+    $this->assertNull($user->fresh());
+    $this->assertDatabaseMissing('pasutijumi', ['pasutijuma_id' => $order->pasutijuma_id]);
+    $this->assertDatabaseMissing('pasutijuma_rindas', ['pasutijuma_id' => $order->pasutijuma_id]);
+});
+
 test('correct password must be provided to delete account', function () {
     $user = Lietotajs::factory()->create([
         'parole' => Hash::make('password'),

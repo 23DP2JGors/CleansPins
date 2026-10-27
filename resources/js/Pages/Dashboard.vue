@@ -84,6 +84,22 @@ const savePassword = () =>
         },
     });
 
+// konta dzēšana (dzēš arī paša pasūtījumus); pēc veiksmes serveris izlogo un pāradresē uz /
+const deleteAccountDialog = ref(false);
+const deleteAccountForm = useForm({ password: '' });
+
+const openDeleteAccount = () => {
+    deleteAccountForm.reset();
+    deleteAccountForm.clearErrors();
+    deleteAccountDialog.value = true;
+};
+
+const deleteAccount = () =>
+    deleteAccountForm.delete(route('profile.destroy'), {
+        preserveScroll: true,
+        onError: () => deleteAccountForm.reset('password'),
+    });
+
 // --- Pasūtījumi ---
 
 const statusColors = {
@@ -228,6 +244,14 @@ const vardnicas = {
                                         </v-btn>
                                         <v-btn variant="outlined" color="secondary" prepend-icon="mdi-lock-outline" @click="openPassword">
                                             Mainīt paroli
+                                        </v-btn>
+                                        <v-btn
+                                            variant="outlined"
+                                            color="error"
+                                            prepend-icon="mdi-account-remove-outline"
+                                            @click="openDeleteAccount"
+                                        >
+                                            Dzēst kontu
                                         </v-btn>
                                     </div>
                                 </div>
@@ -519,6 +543,26 @@ const vardnicas = {
             :loading="cancelling"
             @confirm="cancelOrder"
         />
+
+        <!-- DIALOGS: konta dzēšanas apstiprinājums -->
+        <ConfirmDialog
+            v-model="deleteAccountDialog"
+            title="Dzēst kontu?"
+            text="Konts un visa tava pasūtījumu vēsture tiks neatgriezeniski dzēsta. Lai apstiprinātu, ievadi savu paroli."
+            confirm-text="Dzēst kontu"
+            :loading="deleteAccountForm.processing"
+            @confirm="deleteAccount"
+        >
+            <v-text-field
+                v-model="deleteAccountForm.password"
+                label="Parole"
+                type="password"
+                autocomplete="current-password"
+                class="mt-4"
+                :error-messages="deleteAccountForm.errors.password"
+                @keyup.enter="deleteAccount"
+            />
+        </ConfirmDialog>
     </MainLayout>
 </template>
 
