@@ -1,17 +1,17 @@
 <?php
 
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\KatalogsController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\GrozasController;
-use App\Http\Controllers\PasutijumiController;
-use App\Http\Controllers\PakomatiController;
 use App\Http\Controllers\Admin\AdminPasutijumuController;
 use App\Http\Controllers\Admin\KategorijuController;
 use App\Http\Controllers\Admin\LietotajuController;
 use App\Http\Controllers\Admin\ProblemuController;
 use App\Http\Controllers\Admin\ProduktuController;
 use App\Http\Controllers\Admin\ZonuController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\GrozasController;
+use App\Http\Controllers\KatalogsController;
+use App\Http\Controllers\PakomatiController;
+use App\Http\Controllers\PasutijumiController;
+use App\Http\Controllers\ProfileController;
 use App\Models\Zona;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -42,6 +42,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::delete('/profile/orders', [ProfileController::class, 'destroyOwnOrders'])->name('profile.orders.destroy');
+
     Route::get('/groza', [GrozasController::class, 'index'])->name('groza.index');
     Route::post('/groza', [GrozasController::class, 'store'])->name('groza.store');
     Route::patch('/groza/{rinda}', [GrozasController::class, 'update'])->name('groza.update');

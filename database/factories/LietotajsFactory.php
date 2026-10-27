@@ -13,9 +13,6 @@ class LietotajsFactory extends Factory
 {
     protected $model = Lietotajs::class;
 
-    /**
-     * Parole, ko lieto visi rūpnīcas lietotāji (testos: 'password').
-     */
     protected static ?string $parole;
 
     public function definition(): array
@@ -23,9 +20,11 @@ class LietotajsFactory extends Factory
         return [
             'vards' => fake()->firstName(),
             'uzvards' => fake()->lastName(),
-            // e_pasts kolonna ir max 30 rakstzīmes
+            'name' => fake()->name(),
             'e_pasts' => 'lietotajs' . fake()->unique()->numberBetween(1, 999999) . '@piemers.lv',
+            'email' => fake()->unique()->safeEmail(),
             'parole' => static::$parole ??= Hash::make('password'),
+            'password' => static::$parole ??= Hash::make('password'),
             'loma' => 0,
         ];
     }

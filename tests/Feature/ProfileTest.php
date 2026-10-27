@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\Lietotajs;
+use App\Models\Pasutijums;
+use Illuminate\Support\Facades\Hash;
 
 test('profile page is displayed', function () {
     $user = Lietotajs::factory()->create();
@@ -13,7 +15,11 @@ test('profile page is displayed', function () {
 });
 
 test('profile information can be updated', function () {
-    $user = Lietotajs::factory()->create();
+    $user = Lietotajs::factory()->create([
+        'vards' => 'Original',
+        'uzvards' => 'User',
+        'e_pasts' => 'original@example.com',
+    ]);
 
     $response = $this
         ->actingAs($user)
@@ -61,7 +67,9 @@ test('profile keeps its own e-mail but cannot take another users e-mail', functi
 });
 
 test('user can delete their account', function () {
-    $user = Lietotajs::factory()->create();
+    $user = Lietotajs::factory()->create([
+        'parole' => Hash::make('password'),
+    ]);
 
     $response = $this
         ->actingAs($user)
@@ -78,7 +86,9 @@ test('user can delete their account', function () {
 });
 
 test('correct password must be provided to delete account', function () {
-    $user = Lietotajs::factory()->create();
+    $user = Lietotajs::factory()->create([
+        'parole' => Hash::make('password'),
+    ]);
 
     $response = $this
         ->actingAs($user)
@@ -91,5 +101,31 @@ test('correct password must be provided to delete account', function () {
         ->assertSessionHasErrors('password')
         ->assertRedirect('/profile');
 
+    $this->assertNotNull($user->fresh());
+});
+
+test('user can delete their own orders before deleting account', function () {
+    $user = Lietotajs::factory()->create([
+        'parole' => Hash::make('password'),
+    ]);
+
+    $order = Pasutijums::create([
+        'lietotaja_id' => $user->lietotaja_id,
+        'piegades_adrese' => 'Test street 1',
+        'kopsumma' => 19.99,
+    ]);
+
+    $response = $this
+        ->actingAs($user)
+        ->from('/profile')
+        ->delete('/profile/orders', [
+            'password' => 'password',
+        ]);
+
+    $response
+        ->assertSessionHasNoErrors()
+        ->assertRedirect('/profile');
+
+    $this->assertDatabaseMissing('pasutijumi', ['pasutijuma_id' => $order->pasutijuma_id]);
     $this->assertNotNull($user->fresh());
 });

@@ -44,6 +44,8 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
+        $user->dzestSavosPasutijumus();
+
         Auth::logout();
 
         $user->delete();
@@ -52,5 +54,16 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+    public function destroyOwnOrders(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'password' => ['required', 'current_password'],
+        ]);
+
+        $request->user()->dzestSavosPasutijumus();
+
+        return Redirect::back()->with('status', 'Your orders were deleted successfully.');
     }
 }

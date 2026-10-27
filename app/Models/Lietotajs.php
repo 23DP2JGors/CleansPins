@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Auth\MustVerifyEmail as MustVerifyEmailTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -9,7 +10,7 @@ use Illuminate\Notifications\Notifiable;
 
 class Lietotajs extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, MustVerifyEmailTrait;
 
     protected $table = 'lietotaji';
     protected $primaryKey = 'lietotaja_id';
@@ -17,29 +18,46 @@ class Lietotajs extends Authenticatable
     protected $fillable = [
         'vards',
         'uzvards',
+        'name',
+        'email',
         'e_pasts',
         'adrese',
         'parole',
-        'loma', // 0 - pircējs, 1 - administrators
+        'password',
+        'loma',
+        'email_verified_at',
+        'remember_token',
     ];
 
     protected $hidden = [
         'parole',
+        'password',
+        'remember_token',
     ];
 
     protected function casts(): array
     {
         return [
             'parole' => 'hashed',
+            'password' => 'hashed',
             'loma' => 'integer',
+            'email_verified_at' => 'datetime',
         ];
     }
 
-    // --- Auth: lietotāji lieto "e_pasts" / "parole", nevis Laravel noklusējuma "email" / "password" ---
+    public function getAuthIdentifierName(): string
+    {
+        return 'e_pasts';
+    }
+
+    public function getEmailForPasswordReset(): string
+    {
+        return $this->e_pasts;
+    }
 
     public function getAuthPassword(): string
     {
-        return $this->parole;
+        return (string) ($this->parole ?? $this->password ?? '');
     }
 
     public function getAuthPasswordName(): string
@@ -47,20 +65,67 @@ class Lietotajs extends Authenticatable
         return 'parole';
     }
 
-    // Paroles atjaunošanas saitei (token tabula un e-pasta adresāts) vajag "e_pasts", nevis "email"
-    public function getEmailForPasswordReset(): string
-    {
-        return $this->e_pasts;
-    }
-
     public function routeNotificationForMail(): string
     {
         return $this->e_pasts;
     }
 
+    public function getNameAttribute(): string
+    {
+        return (string) ($this->attributes['name'] ?? $this->attributes['vards'] ?? '');
+    }
+
+    public function setNameAttribute($value): void
+    {
+        $value = trim((string) $value);
+        $this->attributes['name'] = $value;
+
+        if (! array_key_exists('vards', $this->attributes) || $this->attributes['vards'] === null || $this->attributes['vards'] === '') {
+            $this->attributes['vards'] = $value;
+        }
+    }
+
+    public function getEmailAttribute(): string
+    {
+        return (string) ($this->attributes['email'] ?? $this->attributes['e_pasts'] ?? '');
+    }
+
+    public function setEmailAttribute($value): void
+    {
+        $this->attributes['email'] = $value;
+
+        if (! array_key_exists('e_pasts', $this->attributes) || $this->attributes['e_pasts'] === null || $this->attributes['e_pasts'] === '') {
+            $this->attributes['e_pasts'] = $value;
+        }
+    }
+
+    public function getPasswordAttribute(): string
+    {
+        return (string) ($this->attributes['password'] ?? $this->attributes['parole'] ?? '');
+    }
+
+    public function setPasswordAttribute($value): void
+    {
+        $this->attributes['password'] = $value;
+
+        if (! array_key_exists('parole', $this->attributes) || $this->attributes['parole'] === null || $this->attributes['parole'] === '') {
+            $this->attributes['parole'] = $value;
+        }
+    }
+
     public function isAdministrators(): bool
     {
         return (int) $this->loma === 1;
+    }
+
+    public function getIdAttribute(): mixed
+    {
+        return $this->attributes[$this->getKeyName()] ?? null;
+    }
+
+    public function setIdAttribute($value): void
+    {
+        $this->attributes[$this->getKeyName()] = $value;
     }
 
     // --- Attiecības ---
@@ -78,5 +143,18 @@ class Lietotajs extends Authenticatable
     public function getRememberTokenName(): string
     {
         return '';
+    }
+
+    public function dzestSavosPasutijumus(): void
+    {
+        $this->deleteOwnOrders();
+    }
+
+    public function deleteOwnOrders(): void
+    {
+        $this->pasutijumi()->with('rindas')->get()->each(function (Pasutijums $pasutijums): void {
+            $pasutijums->rindas()->delete();
+            $pasutijums->delete();
+        });
     }
 }

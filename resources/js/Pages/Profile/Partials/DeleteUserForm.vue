@@ -1,28 +1,35 @@
 <script setup>
-import DangerButton from '@/Components/DangerButton.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import Modal from '@/Components/Modal.vue';
-import SecondaryButton from '@/Components/SecondaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import { useForm } from '@inertiajs/vue3';
-import { nextTick, ref } from 'vue';
+import DangerButton from "@/Components/DangerButton.vue";
+import InputError from "@/Components/InputError.vue";
+import InputLabel from "@/Components/InputLabel.vue";
+import Modal from "@/Components/Modal.vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
+import TextInput from "@/Components/TextInput.vue";
+import { useForm } from "@inertiajs/vue3";
+import { nextTick, ref } from "vue";
 
-const confirmingUserDeletion = ref(false);
+const confirmingDeletion = ref(false);
+const deletionTarget = ref("user");
 const passwordInput = ref(null);
 
 const form = useForm({
-    password: '',
+    password: "",
 });
 
-const confirmUserDeletion = () => {
-    confirmingUserDeletion.value = true;
+const confirmDeletion = (target) => {
+    deletionTarget.value = target;
+    confirmingDeletion.value = true;
 
     nextTick(() => passwordInput.value.focus());
 };
 
-const deleteUser = () => {
-    form.delete(route('profile.destroy'), {
+const submitDeletion = () => {
+    const routeName =
+        deletionTarget.value === "orders"
+            ? "profile.orders.destroy"
+            : "profile.destroy";
+
+    form.delete(route(routeName), {
         preserveScroll: true,
         onSuccess: () => closeModal(),
         onError: () => passwordInput.value.focus(),
@@ -31,7 +38,8 @@ const deleteUser = () => {
 };
 
 const closeModal = () => {
-    confirmingUserDeletion.value = false;
+    confirmingDeletion.value = false;
+    deletionTarget.value = "user";
 
     form.clearErrors();
     form.reset();
@@ -52,20 +60,34 @@ const closeModal = () => {
             </p>
         </header>
 
-        <DangerButton @click="confirmUserDeletion">Delete Account</DangerButton>
+        <div class="flex flex-wrap gap-3">
+            <DangerButton @click="confirmDeletion('orders')">
+                Delete My Orders
+            </DangerButton>
 
-        <Modal :show="confirmingUserDeletion" @close="closeModal">
+            <DangerButton @click="confirmDeletion('user')">
+                Delete Account
+            </DangerButton>
+        </div>
+
+        <Modal :show="confirmingDeletion" @close="closeModal">
             <div class="p-6">
                 <h2
                     class="text-lg font-medium text-gray-900 dark:text-gray-100"
                 >
-                    Are you sure you want to delete your account?
+                    {{
+                        deletionTarget === "orders"
+                            ? "Are you sure you want to delete your orders?"
+                            : "Are you sure you want to delete your account?"
+                    }}
                 </h2>
 
                 <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                    Once your account is deleted, all of its resources and data
-                    will be permanently deleted. Please enter your password to
-                    confirm you would like to permanently delete your account.
+                    {{
+                        deletionTarget === "orders"
+                            ? "This will permanently remove all of your orders and order details. Please enter your password to confirm."
+                            : "Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account."
+                    }}
                 </p>
 
                 <div class="mt-6">
@@ -82,7 +104,7 @@ const closeModal = () => {
                         type="password"
                         class="mt-1 block w-3/4"
                         placeholder="Password"
-                        @keyup.enter="deleteUser"
+                        @keyup.enter="submitDeletion"
                     />
 
                     <InputError :message="form.errors.password" class="mt-2" />
@@ -97,9 +119,13 @@ const closeModal = () => {
                         class="ms-3"
                         :class="{ 'opacity-25': form.processing }"
                         :disabled="form.processing"
-                        @click="deleteUser"
+                        @click="submitDeletion"
                     >
-                        Delete Account
+                        {{
+                            deletionTarget === "orders"
+                                ? "Delete My Orders"
+                                : "Delete Account"
+                        }}
                     </DangerButton>
                 </div>
             </div>
