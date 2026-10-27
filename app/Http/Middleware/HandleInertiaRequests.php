@@ -29,24 +29,27 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $user = $request->user();
+
         return [
             ...parent::share($request),
             'auth' => [
-                'user' => fn () => $request->user()
+                'isAuthenticated' => $user !== null,
+                'user' => $user
                     ? [
-                        'lietotaja_id' => $request->user()->lietotaja_id,
-                        'vards' => $request->user()->vards,
-                        'uzvards' => $request->user()->uzvards,
-                        'e_pasts' => $request->user()->e_pasts,
-                        'loma' => $request->user()->loma,
-                        'name' => $request->user()->name,
-                        'email' => $request->user()->email,
+                        'lietotaja_id' => $user->lietotaja_id,
+                        'vards' => $user->vards,
+                        'uzvards' => $user->uzvards,
+                        'e_pasts' => $user->e_pasts,
+                        'loma' => $user->loma,
+                        'name' => $user->name,
+                        'email' => $user->email,
                     ]
                     : null,
             ],
             'cart' => [
-                'count' => fn () => $request->user()
-                    ? (int) \App\Models\GrozaRinda::where('lietotaja_id', $request->user()->lietotaja_id)->sum('daudzums')
+                'count' => $user
+                    ? (int) \App\Models\GrozaRinda::where('lietotaja_id', $user->lietotaja_id)->sum('daudzums')
                     : 0,
             ],
             'flash' => [

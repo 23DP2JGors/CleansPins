@@ -1,29 +1,32 @@
 <script setup>
-import { ref, computed, watch } from 'vue';
-import { Link, usePage, router } from '@inertiajs/vue3';
+import { ref, computed, watch } from "vue";
+import { Link, usePage, router } from "@inertiajs/vue3";
 
 const page = usePage();
 const drawer = ref(false);
 
 const user = computed(() => page.props.auth?.user ?? null);
+const isAuthenticated = computed(() =>
+    Boolean(page.props.auth?.isAuthenticated ?? !!user.value),
+);
 const currentUrl = computed(() => page.url);
 
 const cartCount = computed(() => page.props.cart?.count ?? 0);
 
 const snackbar = ref(false);
-const snackText = ref('');
-const snackColor = ref('success');
+const snackText = ref("");
+const snackColor = ref("success");
 
 // Placeholder paths, to be replaced with route() calls once those routes exist
 const links = [
-    { title: 'Katalogs', href: '/katalogs' },
-    { title: 'Kā tas darbojas', href: '/ka-tas-darbojas' },
-    { title: 'Padomi', href: '/padomi' },
+    { title: "Katalogs", href: "/katalogs" },
+    { title: "Kā tas darbojas", href: "/ka-tas-darbojas" },
+    { title: "Padomi", href: "/padomi" },
 ];
 
 const isActive = (href) => currentUrl.value.startsWith(href);
 
-const logout = () => router.post(route('logout'));
+const logout = () => router.post(route("logout"));
 
 const year = new Date().getFullYear();
 
@@ -32,11 +35,11 @@ watch(
     (f) => {
         if (f?.success) {
             snackText.value = f.success;
-            snackColor.value = 'success';
+            snackColor.value = "success";
             snackbar.value = true;
         } else if (f?.error) {
             snackText.value = f.error;
-            snackColor.value = 'error';
+            snackColor.value = "error";
             snackbar.value = true;
         }
     },
@@ -46,7 +49,10 @@ watch(
     <v-app>
         <!-- HEADER -->
         <v-app-bar color="secondary" flat height="72">
-            <v-container class="d-flex align-center fill-height" style="max-width: 1280px">
+            <v-container
+                class="d-flex align-center fill-height"
+                style="max-width: 1280px"
+            >
                 <!-- Mobile menu button -->
                 <v-app-bar-nav-icon
                     class="d-md-none"
@@ -54,9 +60,15 @@ watch(
                 />
 
                 <!-- Logo -->
-                <Link href="/" class="text-decoration-none d-flex align-center ga-2">
+                <Link
+                    href="/"
+                    class="text-decoration-none d-flex align-center ga-2"
+                >
                     <v-icon icon="mdi-car-wash" color="primary" size="28" />
-                    <span class="text-title-large font-weight-bold text-white" style="letter-spacing: 2px">
+                    <span
+                        class="text-title-large font-weight-bold text-white"
+                        style="letter-spacing: 2px"
+                    >
                         AUTO <span class="text-primary">CARE</span>
                     </span>
                 </Link>
@@ -76,14 +88,25 @@ watch(
                         {{ item.title }}
                     </v-btn>
 
-                    <v-btn :href="route('groza.index')" icon variant="text" color="white" class="ml-2">
-                        <v-badge :content="cartCount" :model-value="cartCount > 0" color="primary" floating>
+                    <v-btn
+                        :href="route('groza.index')"
+                        icon
+                        variant="text"
+                        color="white"
+                        class="ml-2"
+                    >
+                        <v-badge
+                            :content="cartCount"
+                            :model-value="cartCount > 0"
+                            color="primary"
+                            floating
+                        >
                             <v-icon icon="mdi-cart-outline" />
                         </v-badge>
                     </v-btn>
 
                     <v-btn
-                        v-if="!user"
+                        v-if="!isAuthenticated"
                         :href="route('login')"
                         color="primary"
                         variant="flat"
@@ -93,11 +116,20 @@ watch(
                     </v-btn>
 
                     <template v-else>
-                        <v-btn :href="route('dashboard')" variant="text" color="white">
+                        <v-btn
+                            :href="route('dashboard')"
+                            variant="text"
+                            color="white"
+                        >
                             <v-icon icon="mdi-account-circle-outline" start />
                             {{ user.vards }}
                         </v-btn>
-                        <v-btn color="primary" variant="flat" class="ml-2" @click="logout">
+                        <v-btn
+                            color="primary"
+                            variant="flat"
+                            class="ml-2"
+                            @click="logout"
+                        >
                             Iziet
                         </v-btn>
                     </template>
@@ -123,7 +155,7 @@ watch(
                 />
                 <v-divider class="my-2" />
                 <v-list-item
-                    v-if="!user"
+                    v-if="!isAuthenticated"
                     :href="route('login')"
                     title="Pieslēgties"
                     prepend-icon="mdi-login"
@@ -144,7 +176,12 @@ watch(
             <slot />
         </v-main>
 
-        <v-snackbar v-model="snackbar" :color="snackColor" timeout="2500" location="bottom right">
+        <v-snackbar
+            v-model="snackbar"
+            :color="snackColor"
+            timeout="2500"
+            location="bottom right"
+        >
             {{ snackText }}
         </v-snackbar>
 
@@ -154,18 +191,33 @@ watch(
                 <v-row>
                     <v-col cols="12" md="5">
                         <div class="d-flex align-center ga-2 mb-3">
-                            <v-icon icon="mdi-car-wash" color="primary" size="28" />
-                            <span class="text-title-large font-weight-bold text-white" style="letter-spacing: 2px">
+                            <v-icon
+                                icon="mdi-car-wash"
+                                color="primary"
+                                size="28"
+                            />
+                            <span
+                                class="text-title-large font-weight-bold text-white"
+                                style="letter-spacing: 2px"
+                            >
                                 AUTO <span class="text-primary">CARE</span>
                             </span>
                         </div>
-                        <p class="text-body-medium text-white" style="opacity: 0.7; max-width: 360px">
-                            Profesionāla auto kopšanas ķīmija. Atrodi īsto produktu savam auto pēc zonas vai problēmas.
+                        <p
+                            class="text-body-medium text-white"
+                            style="opacity: 0.7; max-width: 360px"
+                        >
+                            Profesionāla auto kopšanas ķīmija. Atrodi īsto
+                            produktu savam auto pēc zonas vai problēmas.
                         </p>
                     </v-col>
 
                     <v-col cols="6" md="3">
-                        <div class="text-title-small font-weight-bold text-primary mb-3">Navigācija</div>
+                        <div
+                            class="text-title-small font-weight-bold text-primary mb-3"
+                        >
+                            Navigācija
+                        </div>
                         <div class="d-flex flex-column ga-2">
                             <Link
                                 v-for="item in links"
@@ -180,18 +232,46 @@ watch(
                     </v-col>
 
                     <v-col cols="6" md="4">
-                        <div class="text-title-small font-weight-bold text-primary mb-3">Kontakti</div>
-                        <div class="d-flex flex-column ga-2 text-body-medium text-white" style="opacity: 0.8">
-                            <span><v-icon icon="mdi-email-outline" size="16" class="mr-2" />info@autocare.lv</span>
-                            <span><v-icon icon="mdi-phone-outline" size="16" class="mr-2" />+371 20000000</span>
-                            <span><v-icon icon="mdi-map-marker-outline" size="16" class="mr-2" />Rīga, Latvija</span>
+                        <div
+                            class="text-title-small font-weight-bold text-primary mb-3"
+                        >
+                            Kontakti
+                        </div>
+                        <div
+                            class="d-flex flex-column ga-2 text-body-medium text-white"
+                            style="opacity: 0.8"
+                        >
+                            <span
+                                ><v-icon
+                                    icon="mdi-email-outline"
+                                    size="16"
+                                    class="mr-2"
+                                />info@autocare.lv</span
+                            >
+                            <span
+                                ><v-icon
+                                    icon="mdi-phone-outline"
+                                    size="16"
+                                    class="mr-2"
+                                />+371 20000000</span
+                            >
+                            <span
+                                ><v-icon
+                                    icon="mdi-map-marker-outline"
+                                    size="16"
+                                    class="mr-2"
+                                />Rīga, Latvija</span
+                            >
                         </div>
                     </v-col>
                 </v-row>
 
                 <v-divider class="my-6" style="opacity: 0.2" color="white" />
 
-                <div class="text-body-small text-white text-center" style="opacity: 0.6">
+                <div
+                    class="text-body-small text-white text-center"
+                    style="opacity: 0.6"
+                >
                     © {{ year }} Auto Care. Visas tiesības aizsargātas.
                 </div>
             </v-container>
