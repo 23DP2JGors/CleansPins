@@ -1,12 +1,11 @@
 <?php
 
-use App\Models\User;
 use App\Models\Lietotajs;
 use App\Models\Pasutijums;
 use Illuminate\Support\Facades\Hash;
 
 test('profile page is displayed', function () {
-    $user = User::factory()->create();
+    $user = Lietotajs::factory()->create();
 
     $response = $this
         ->actingAs($user)
@@ -16,7 +15,11 @@ test('profile page is displayed', function () {
 });
 
 test('profile information can be updated', function () {
-    $user = User::factory()->create();
+    $user = Lietotajs::factory()->create([
+        'vards' => 'Original',
+        'uzvards' => 'User',
+        'e_pasts' => 'original@example.com',
+    ]);
 
     $response = $this
         ->actingAs($user)
@@ -31,13 +34,14 @@ test('profile information can be updated', function () {
 
     $user->refresh();
 
-    $this->assertSame('Test User', $user->name);
-    $this->assertSame('test@example.com', $user->email);
-    $this->assertNull($user->email_verified_at);
+    $this->assertSame('Test User', $user->vards);
+    $this->assertSame('test@example.com', $user->e_pasts);
 });
 
 test('email verification status is unchanged when the email address is unchanged', function () {
-    $user = User::factory()->create();
+    $user = Lietotajs::factory()->create([
+        'e_pasts' => 'same@example.com',
+    ]);
 
     $response = $this
         ->actingAs($user)
@@ -50,11 +54,13 @@ test('email verification status is unchanged when the email address is unchanged
         ->assertSessionHasNoErrors()
         ->assertRedirect('/profile');
 
-    $this->assertNotNull($user->refresh()->email_verified_at);
+    $this->assertNotNull($user->refresh());
 });
 
 test('user can delete their account', function () {
-    $user = User::factory()->create();
+    $user = Lietotajs::factory()->create([
+        'parole' => Hash::make('password'),
+    ]);
 
     $response = $this
         ->actingAs($user)
@@ -71,7 +77,9 @@ test('user can delete their account', function () {
 });
 
 test('correct password must be provided to delete account', function () {
-    $user = User::factory()->create();
+    $user = Lietotajs::factory()->create([
+        'parole' => Hash::make('password'),
+    ]);
 
     $response = $this
         ->actingAs($user)

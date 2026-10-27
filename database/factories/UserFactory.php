@@ -2,16 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Models\User;
+use App\Models\Lietotajs;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 /**
- * @extends Factory<User>
+ * @extends Factory<Lietotajs>
  */
 class UserFactory extends Factory
 {
+    protected $model = Lietotajs::class;
+
     /**
      * The current password being used by the factory.
      */
@@ -25,11 +26,14 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
+            'vards' => fake()->firstName(),
+            'uzvards' => fake()->lastName(),
             'name' => fake()->name(),
+            'e_pasts' => fake()->unique()->safeEmail(),
             'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
+            'parole' => static::$password ??= Hash::make('password'),
             'password' => static::$password ??= Hash::make('password'),
-            'remember_token' => Str::random(10),
+            'loma' => 0,
         ];
     }
 
@@ -38,8 +42,6 @@ class UserFactory extends Factory
      */
     public function unverified(): static
     {
-        return $this->state(fn (array $attributes) => [
-            'email_verified_at' => null,
-        ]);
+        return $this;
     }
 }
