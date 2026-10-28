@@ -67,13 +67,13 @@ const submit = () => {
                             density="compact"
                             hide-details
                         />
-                        <Link
+                        <!-- <Link
                             v-if="canResetPassword"
                             :href="route('password.request')"
                             class="text-body-medium"
                         >
                             Aizmirsi paroli?
-                        </Link>
+                        </Link> -->
                     </div>
 
                     <v-btn

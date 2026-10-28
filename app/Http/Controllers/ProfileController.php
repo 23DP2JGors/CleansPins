@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -43,6 +44,13 @@ class ProfileController extends Controller
         ]);
 
         $user = $request->user();
+
+        // administrators savu kontu dzēst nevar
+        if ($user->isAdministrators()) {
+            throw ValidationException::withMessages([
+                'password' => 'Administrators savu kontu dzēst nevar.',
+            ]);
+        }
 
         $user->dzestSavosPasutijumus();
 

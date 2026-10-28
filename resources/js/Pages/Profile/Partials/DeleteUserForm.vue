@@ -5,8 +5,10 @@ import InputLabel from "@/Components/InputLabel.vue";
 import Modal from "@/Components/Modal.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
-import { useForm } from "@inertiajs/vue3";
-import { nextTick, ref } from "vue";
+import { useForm, usePage } from "@inertiajs/vue3";
+import { computed, nextTick, ref } from "vue";
+
+const isAdmin = computed(() => Number(usePage().props.auth.user?.loma) === 1);
 
 const confirmingDeletion = ref(false);
 const deletionTarget = ref("user");
@@ -65,10 +67,14 @@ const closeModal = () => {
                 Delete My Orders
             </DangerButton>
 
-            <DangerButton @click="confirmDeletion('user')">
+            <DangerButton v-if="!isAdmin" @click="confirmDeletion('user')">
                 Delete Account
             </DangerButton>
         </div>
+
+        <p v-if="isAdmin" class="text-sm text-gray-600 dark:text-gray-400">
+            Administrator account cannot be deleted.
+        </p>
 
         <Modal :show="confirmingDeletion" @close="closeModal">
             <div class="p-6">
